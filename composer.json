@@ -1,0 +1,22 @@
+{
+  "name": "phphp/phphp",
+  "description": "PHP html parser",
+  "license": "MIT",
+  "require": {},
+  "require-dev": {
+    "phpunit/phpunit": "^5.4"
+  },
+  "autoload": {
+    "psr-4": {
+      "Phphp\\": "src/Phphp"
+    },
+    "files": [
+      "src/Phphp.php"
+    ]
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Phphp\\Tests\\": "tests"
+    }
+  }
+}
