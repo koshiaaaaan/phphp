@@ -1,16 +1,16 @@
 <?php
 namespace Phphp;
 
-use Phphp\Reader\ReaderInterface;
-use Phphp\Reader\StringReader;
-use Phphp\Parser\HtmlParser;
+use Phphp\Lexer\Reader\ReaderInterface;
+use Phphp\Lexer\Reader\String;
+use Phphp\Parser\Html5;
 
 class Phphp
 {
     /**
      * document reader
-     * @var Phphp\Parser\Reader\ReaderInterface
-     */
+     * @var Phphp\Lexer\Reader\ReaderInterface
+     **/
     private $reader;
 
     /**
@@ -21,14 +21,14 @@ class Phphp
     public static function factory($html)
     {
         if (is_string($html)) {
-            $html   = new StringReader($html);
+            $html   = new String($html);
         }
 
         if (!$html instanceof ReaderInterface) {
             throw new \InvalidArgumentException('与えられたパラメータが正しくありません');
         }
 
-        $result = HtmlParser::parse($html);
+        $result = Html5::parse($html);
 
         return new self();
     }

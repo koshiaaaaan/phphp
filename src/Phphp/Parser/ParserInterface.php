@@ -1,7 +1,7 @@
 <?php
 namespace Phphp\Parser;
 
-use Phphp\Reader\ReaderInterface;
+use Phphp\Lexer\Reader\ReaderInterface;
 
 interface ParserInterface
 {
