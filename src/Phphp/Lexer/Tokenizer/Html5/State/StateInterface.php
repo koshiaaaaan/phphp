@@ -1,13 +1,11 @@
 <?php
 namespace Phphp\Lexer\Tokenizer\Html5\State;
 
-use Phphp\Lexer\Tokenizer\TokenizerInterface;
-
 /**
- * @category StateHandler
- * @package Analyzer
- **/
+ * Interface StateInterface
+ * @package Phphp\Lexer\Tokenizer\Html5\State
+ */
 interface StateInterface
 {
-    public function handle(TokenizerInterface $tokenizer);
+    public function handle();
 }

@@ -36,9 +36,13 @@ class String implements ReaderInterface
             ));
         }
         $this->data         = $data;
+        $this->pos          = (substr($data, 0, 3) === Character::BOM) ? 2 : -1;
         $this->lastCharPos  = strlen($data);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function advance()
     {
         $this->pos++;
@@ -65,6 +69,9 @@ class String implements ReaderInterface
         return $char;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function retreat()
     {
         if ($this->pos === $this->lastGapPos) {

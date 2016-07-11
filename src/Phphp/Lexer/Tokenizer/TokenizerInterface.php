@@ -2,11 +2,10 @@
 namespace Phphp\Lexer\Tokenizer;
 
 /**
- * データをトークン化する
- *
- * @category Lexer
- * @package Analyzer
- **/
+ * Interface TokenizerInterface
+ * @package Phphp\Lexer\Tokenizer
+ */
 interface TokenizerInterface
 {
+    const PARSE_ERROR   = 0b00000001;
 }

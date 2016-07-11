@@ -9,4 +9,13 @@ namespace Phphp\Lexer\Reader;
  **/
 interface ReaderInterface
 {
+    /**
+     * @return string
+     */
+    public function advance();
+
+    /**
+     * @return integer
+     */
+    public function retreat();
 }
