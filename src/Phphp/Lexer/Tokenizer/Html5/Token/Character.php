@@ -17,4 +17,9 @@ class Character implements TokenInterface
     {
         $this->chars    .= $char;
     }
+
+    public function getCharacters()
+    {
+        return  $this->chars;
+    }
 }

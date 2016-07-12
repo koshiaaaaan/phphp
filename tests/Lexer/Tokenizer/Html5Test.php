@@ -6,19 +6,22 @@ use Phphp\Lexer\Reader\String;
 
 class Html5Test extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @var Html5
-     */
-    private $tokenizer;
-
-    public function setUp()
+    public function testGetCharacterToken()
     {
-        $this->tokenizer = new Html5(new String('abcde'));
+        $tokenizer = new Html5(new String('abcde'));
+        /* @var Html5\Token\Character $token */
+        $token  = $tokenizer->getNextToken();
+        $this->assertInstanceOf(Html5\Token\Character::class, $token);
+        $this->assertEquals('abcde', $token->getCharacters());
+        return  $tokenizer;
     }
 
-    public function testGetNextToken()
+    /**
+     * @depends testGetCharacterToken
+     */
+    public function testGetEofToken($tokenizer)
     {
-        $token  = $this->tokenizer->getNextToken();
-        $this->assertInstanceOf('Phphp\\Lexer\\Tokenizer\\Html5\\Token\\Character', $token);
+        $token  = $tokenizer->getNextToken();
+        $this->assertInstanceOf(Html5\Token\Eof::class, $token);
     }
 }

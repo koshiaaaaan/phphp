@@ -47,7 +47,7 @@ class String implements ReaderInterface
     {
         $this->pos++;
 
-        if ($this->pos > $this->lastCharPos) {
+        if ($this->pos >= $this->lastCharPos) {
             return Character::EOF;
         }
 
