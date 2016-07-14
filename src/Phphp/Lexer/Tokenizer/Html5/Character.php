@@ -1,5 +1,5 @@
 <?php
-namespace Phphp\Lexer;
+namespace Phphp\Lexer\Tokenizer\Html5;
 
 class Character
 {
@@ -43,4 +43,13 @@ class Character
     const SEQUENCE_SCRIPT       = "\x73\x63\x72\x69\x70\x74";       // script
     const SEQUENCE_PUBLIC       = "\x50\x55\x42\x4C\x49\x43";       // PUBLIC
     const SEQUENCE_SYSTEM       = "\x53\x59\x53\x54\x45\x4D";       // SYSTEM
+
+    protected static $namedCharacterReferences  = null;
+
+    public static function getNamedCharacterMaxLength()
+    {
+        if (!static::$namedCharacterReferences) {
+            static::$namedCharacterReferences   = require __DIR__ . '/';
+        }
+    }
 }

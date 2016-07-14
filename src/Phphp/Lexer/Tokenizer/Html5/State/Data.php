@@ -3,7 +3,7 @@ namespace Phphp\Lexer\Tokenizer\Html5\State;
 
 use Phphp\Lexer\Tokenizer\TokenizerInterface;
 use Phphp\Lexer\Tokenizer\Html5\Token;
-use Phphp\Lexer\Character;
+use Phphp\Lexer\Tokenizer\Html5\Character;
 
 /**
  * Class Data
@@ -13,19 +13,22 @@ class Data extends AbstractState
 {
     public function handle()
     {
-        $char = $this->getTokenizer()->consume();
+        $tokenizer  = $this->getTokenizer();
+        $char = $tokenizer->consume();
 
         if ($char === Character::AMPERSAND) {
-            $this->getTokenizer()->setState('CharacterReferenceInData');
+            $state  = new CharacterReference();
+            $state->setReturnState($this);
+            $tokenizer->setState($state);
         } elseif ($char === Character::LESS_THAN_SIGN) {
-            $this->getTokenizer()->setState('TagOpen');
+            $tokenizer->setState(new TagOpen());
         } elseif ($char === Character::NULL) {
-            $this->getTokenizer()->error(TokenizerInterface::PARSE_ERROR);
-            $this->emitCharacterToken($char);
+            $tokenizer->error(TokenizerInterface::PARSE_ERROR);
+            $tokenizer->emitToken(new Token\Character($char));
         } elseif ($char === Character::EOF) {
-            $this->emitEofToken();
+            $tokenizer->emitToken(new Token\Eof());
         } else {
-            $this->emitCharacterToken($char);
+            $tokenizer->emitToken(new Token\Character($char));
         }
     }
 }

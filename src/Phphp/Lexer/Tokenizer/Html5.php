@@ -3,7 +3,8 @@ namespace Phphp\Lexer\Tokenizer;
 
 use Phphp\Lexer\Reader\ReaderInterface;
 use Phphp\Lexer\Tokenizer\Html5\State;
-use Phphp\Lexer\Tokenizer\Html5\Token\TokenInterface;
+use Phphp\Lexer\Tokenizer\Html5\TemporaryBuffer;
+use Phphp\Lexer\Tokenizer\Html5\Token;
 
 /**
  * Class Html5
@@ -17,17 +18,17 @@ class Html5 implements TokenizerInterface
     private $reader;
 
     /**
+     * @var TemporaryBuffer
+     */
+    private $temporaryBuffer;
+
+    /**
      * @var State\StateInterface
      */
     private $state;
 
     /**
-     * @var State\StateInterface[]
-     */
-    private $stateCache = [];
-
-    /**
-     * @var TokenInterface[]
+     * @var Token\TokenInterface[]
      */
     private $tokenQueue = [];
 
@@ -38,26 +39,23 @@ class Html5 implements TokenizerInterface
     public function __construct(ReaderInterface $reader)
     {
         $this->reader   = $reader;
-        $this->setState('Data');
+        $this->temporaryBuffer  = new TemporaryBuffer();
+        $this->setState(new State\Data());
     }
 
     /**
-     * @param string $state
+     * @param State\StateInterface $state
+     * @return $this
      */
-    public function setState($state)
+    public function setState(State\StateInterface $state)
     {
-        $class  = 'Phphp\\Lexer\\Tokenizer\\Html5\\State\\' . $state;
-        if (isset($this->stateCache[$class])) {
-            $state  = $this->stateCache[$class];
-        } else {
-            $state  = new $class($this);
-            $this->stateCache[$class]   = $state;
-        }
+        $state->setTokenizer($this);
         $this->state    = $state;
+        return  $this;
     }
 
     /**
-     * @return TokenInterface
+     * @return Token\TokenInterface
      */
     public function getNextToken()
     {
@@ -73,9 +71,9 @@ class Html5 implements TokenizerInterface
     }
 
     /**
-     * @param TokenInterface $token
+     * @param Token\TokenInterface $token
      */
-    public function addTokenQueue(TokenInterface $token)
+    public function emitToken(Token\TokenInterface $token)
     {
         $this->tokenQueue[] = $token;
     }
@@ -85,7 +83,23 @@ class Html5 implements TokenizerInterface
      */
     public function consume()
     {
-        return $this->reader->advance();
+        return  $this->reader->advance();
+    }
+
+    /**
+     * @return int
+     */
+    public function unconsume()
+    {
+        return  $this->reader->retreat();
+    }
+
+    /**
+     * @return TemporaryBuffer
+     */
+    public function getTemporaryBuffer()
+    {
+        return  $this->temporaryBuffer;
     }
 
     /**
