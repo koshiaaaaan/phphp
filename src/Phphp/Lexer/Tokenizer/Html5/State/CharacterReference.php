@@ -1,6 +1,7 @@
 <?php
 namespace Phphp\Lexer\Tokenizer\Html5\State;
 use Phphp\Lexer\Tokenizer\Html5\Character;
+use Phphp\Lexer\Tokenizer\Html5\NamedCharacterReferences;
 
 /**
  * Class CharacterReferenceInData
@@ -44,7 +45,31 @@ class CharacterReference extends AbstractState
             $tmpBuff->append($char);
             $tokenizer->setState(new NumericCharacterReference());
         } else {
-            Character::getNamedCharacterMaxLength();
+            $referencedCodepoints   = null;
+            $referencedCharacter    = null;
+            $entityConsumedCount    = 0;
+            $consumedCount  = 1;
+            $entity = '';
+
+            $maxlen = NamedCharacterReferences::getNamedCharacterMaxLength();
+            $ncrs   = NamedCharacterReferences::getNamedCharacterReferences();
+            $chars  = Character::AMPERSAND . $char;
+            while (
+                $char !== Character::EOF &&
+                strlen($chars) <= $maxlen
+            ) {
+                if (isset($ncrs[$chars])) {
+                    $referencedCodepoints   = $ncrs[$chars]['codepoints'];
+                    $referencedCharacter    = $ncrs[$chars]['characters'];
+                    $entity = $chars;
+                    $entityConsumedCount    = $consumedCount;
+                }
+
+                if ($char === Character::SEMICOLON) break;
+
+                $chars  .= $char = $tokenizer->consume();
+                $consumedCount++;
+            }
         }
     }
 

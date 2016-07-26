@@ -14,8 +14,10 @@ function quote($str, $q = "'") {
     return  $q.$str.$q;
 }
 
+define('LF', "\n");
+
 $indent = '    ';
-$member = '[' . PHP_EOL;
+$member = '[' . LF;
 
 $refs   = json_decode($contents, true);
 $maxlen = 0;
@@ -24,20 +26,20 @@ foreach ($refs as $key => $ref) {
     if ($maxlen < $len) $maxlen = $len;
     $refs[$key]['characters'] = '\x' . substr(chunk_split(strtoupper(bin2hex($ref['characters'])), 2, '\x'), 0, -2);
 
-    $member .= str_repeat($indent, 2) . quote($key) . ' => [' . PHP_EOL;
+    $member .= str_repeat($indent, 2) . quote($key) . ' => [' . LF;
     $member .= str_repeat($indent, 3) . "'codepoints' => [";
     if (isset($ref['codepoints']) && is_array($ref['codepoints'])) {
         $member .= join(', ', $ref['codepoints']);
     }
-    $member .= '],' . PHP_EOL;
-    $member .= str_repeat($indent, 3) . "'characters' => " . quote($refs[$key]['characters'], '"') . ',' . PHP_EOL;
-    $member .= str_repeat($indent, 2) . '],' . PHP_EOL;
+    $member .= '],' . LF;
+    $member .= str_repeat($indent, 3) . "'characters' => " . quote($refs[$key]['characters'], '"') . ',' . LF;
+    $member .= str_repeat($indent, 2) . '],' . LF;
 }
 $member .= str_repeat($indent, 1) . ']';
 
-$refs   = var_export($refs, true);
-$refs   = preg_replace('/(\'characters\'\s=>\s)\'(.*?)\'/', '$1"$2"', $refs);
-$refs   = preg_replace('/\\\\\\\\x(..)/', '\x$1', $refs);
+// $refs   = var_export($refs, true);
+// $refs   = preg_replace('/(\'characters\'\s=>\s)\'(.*?)\'/', '$1"$2"', $refs);
+// $refs   = preg_replace('/\\\\\\\\x(..)/', '\x$1', $refs);
 
 $result = <<<_PHP_
 <?php
