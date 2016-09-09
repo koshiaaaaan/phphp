@@ -17,9 +17,8 @@ class Data extends AbstractState
         $char = $tokenizer->consume();
 
         if ($char === Character::AMPERSAND) {
-            $state  = new CharacterReference();
-            $state->setReturnState($this);
-            $tokenizer->setState($state);
+            $tokenizer->setReturnState($this);
+            $tokenizer->setState(new CharacterReference());
         } elseif ($char === Character::LESS_THAN_SIGN) {
             $tokenizer->setState(new TagOpen());
         } elseif ($char === Character::NULL) {

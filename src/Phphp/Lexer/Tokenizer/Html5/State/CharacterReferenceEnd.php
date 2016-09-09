@@ -1,5 +1,6 @@
 <?php
 namespace Phphp\Lexer\Tokenizer\Html5\State;
+use Phphp\Lexer\Tokenizer\Html5\Token;
 
 /**
  * Class CharacterReferenceInEndData
@@ -7,30 +8,22 @@ namespace Phphp\Lexer\Tokenizer\Html5\State;
  */
 class CharacterReferenceEnd extends AbstractState
 {
-    /**
-     * @var StateInterface
-     */
-    private $returnState;
-
     public function handle()
     {
-    }
+        $tokenizer      = $this->getTokenizer();
 
-    /**
-     * @param StateInterface $state
-     * @return $this
-     */
-    public function setReturnState(StateInterface $state)
-    {
-        $this->returnState  = $state;
-        return  $this;
-    }
+        $returnState    = $tokenizer->getReturnState();
 
-    /**
-     * @return StateInterface
-     */
-    public function getReturnState()
-    {
-        return  $this->returnState;
+        $buffer         = $tokenizer->getTemporaryBuffer()->getBuffer();
+
+        if (
+            $returnState instanceof AttributeValueAtDoubleQuoted ||
+            $returnState instanceof AttributeValueAtSignleQuoted ||
+            $returnState instanceof AttributeValueAtUnquoted
+        ) {
+
+        } else {
+            $tokenizer->emitToken(new Token\Character($buffer));
+        }
     }
 }

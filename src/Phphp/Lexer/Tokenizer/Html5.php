@@ -28,6 +28,11 @@ class Html5 implements TokenizerInterface
     private $state;
 
     /**
+     * @var State\StateInterface
+     */
+    private $returnState;
+
+    /**
      * @var Token\TokenInterface[]
      */
     private $tokenQueue = [];
@@ -87,11 +92,17 @@ class Html5 implements TokenizerInterface
     }
 
     /**
-     * @return int
+     * @param integer $count
      */
-    public function unconsume()
+    public function unconsume($count = null)
     {
-        return  $this->reader->retreat();
+        if (is_int($count) && $count > 0) {
+            while ($count-- <= 0) {
+                $this->reader->retreat();
+            }
+        } else {
+            $this->reader->retreat();
+        }
     }
 
     /**
@@ -100,6 +111,22 @@ class Html5 implements TokenizerInterface
     public function getTemporaryBuffer()
     {
         return  $this->temporaryBuffer;
+    }
+
+    /**
+     * @param State\StateInterface $state
+     */
+    public function setReturnState(State\StateInterface $state)
+    {
+        $this->returnState  = $state;
+    }
+
+    /**
+     * @return State\StateInterface
+     */
+    public function getReturnState()
+    {
+        return  $this->returnState;
     }
 
     /**

@@ -2,6 +2,7 @@
 namespace Phphp\Lexer\Tokenizer\Html5\State;
 use Phphp\Lexer\Tokenizer\Html5\Character;
 use Phphp\Lexer\Tokenizer\Html5\NamedCharacterReferences;
+use Phphp\Lexer\Tokenizer\TokenizerInterface;
 
 /**
  * Class CharacterReferenceInData
@@ -9,11 +10,6 @@ use Phphp\Lexer\Tokenizer\Html5\NamedCharacterReferences;
  */
 class CharacterReference extends AbstractState
 {
-    /**
-     * @var StateInterface
-     */
-    private $returnState;
-
     public function handle()
     {
         $tokenizer  = $this->getTokenizer();
@@ -37,9 +33,7 @@ class CharacterReference extends AbstractState
         ) {
             // Reconsume in the character reference end state.
             $tokenizer->unconsume();
-            $state  = new CharacterReferenceEnd();
-            $state->setReturnState($this->getReturnState());
-            $tokenizer->setState($state);
+            $tokenizer->setState(new CharacterReferenceEnd());
         } elseif ($char === Character::NUMBER_SIGN) {
             // &#...
             $tmpBuff->append($char);
@@ -70,24 +64,18 @@ class CharacterReference extends AbstractState
                 $chars  .= $char = $tokenizer->consume();
                 $consumedCount++;
             }
+
+            if ($referencedCharacter) {
+                if (substr($entity, -1) !== Character::SEMICOLON) {
+                    $tokenizer->unconsume($consumedCount - $entityConsumedCount);
+                    $tokenizer->error(TokenizerInterface::PARSE_ERROR);
+                }
+                $tmpBuff->reset();
+                $tmpBuff->append($referencedCharacter);
+            }
+
+            $tokenizer->unconsume($consumedCount);
+            $tokenizer->setState(new CharacterReferenceEnd());
         }
-    }
-
-    /**
-     * @param StateInterface $state
-     * @return $this
-     */
-    public function setReturnState(StateInterface $state)
-    {
-        $this->returnState  = $state;
-        return  $this;
-    }
-
-    /**
-     * @return StateInterface
-     */
-    public function getReturnState()
-    {
-        return  $this->returnState;
     }
 }
