@@ -3,7 +3,7 @@ namespace Phphp\Lexer\Reader;
 
 use Phphp\Lexer\Character;
 
-class String implements ReaderInterface
+class StringReader implements Reader
 {
     /**
      * Raw data

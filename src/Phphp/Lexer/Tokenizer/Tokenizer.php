@@ -2,10 +2,10 @@
 namespace Phphp\Lexer\Tokenizer;
 
 /**
- * Interface TokenizerInterface
+ * Interface Tokenizer
  * @package Phphp\Lexer\Tokenizer
  */
-interface TokenizerInterface
+interface Tokenizer
 {
     const PARSE_ERROR   = 0b00000001;
 }

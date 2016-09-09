@@ -2,10 +2,10 @@
 namespace Phphp\Lexer\Tokenizer\Html5\State;
 
 /**
- * Class TagOpen
+ * Class TagOpenState
  * @package Phphp\Lexer\Tokenizer\Html5\State
  */
-class TagOpen extends AbstractState
+class TagOpenState extends AbstractState
 {
 
 }

@@ -1,22 +1,23 @@
 <?php
 namespace Phphp\Lexer\Tokenizer\Html5\State;
+
+use Phphp\Lexer\Tokenizer\Tokenizer;
 use Phphp\Lexer\Tokenizer\Html5\Character;
 use Phphp\Lexer\Tokenizer\Html5\NamedCharacterReferences;
-use Phphp\Lexer\Tokenizer\TokenizerInterface;
 
 /**
- * Class CharacterReferenceInData
+ * Class CharacterReferenceState
  * @package Phphp\Lexer\Tokenizer\Html5\State
  */
-class CharacterReference extends AbstractState
+class CharacterReferenceState extends AbstractState
 {
     public function handle()
     {
-        $tokenizer  = $this->getTokenizer();
+        $tokenizer = $this->getTokenizer();
 
         // Set the temporary buffer to the empty string.
         // Append a U+0026 AMPERSAND (&) character to the temporary buffer.
-        $tmpBuff    = $tokenizer->getTemporaryBuffer();
+        $tmpBuff = $tokenizer->getTemporaryBuffer();
         $tmpBuff->reset();
         $tmpBuff->append(Character::AMPERSAND);
 
@@ -33,49 +34,49 @@ class CharacterReference extends AbstractState
         ) {
             // Reconsume in the character reference end state.
             $tokenizer->unconsume();
-            $tokenizer->setState(new CharacterReferenceEnd());
+            $tokenizer->setState(new CharacterReferenceEndState());
         } elseif ($char === Character::NUMBER_SIGN) {
             // &#...
             $tmpBuff->append($char);
-            $tokenizer->setState(new NumericCharacterReference());
+            $tokenizer->setState(new NumericCharacterReferenceState());
         } else {
-            $referencedCodepoints   = null;
-            $referencedCharacter    = null;
-            $entityConsumedCount    = 0;
-            $consumedCount  = 1;
+            $referencedCodepoints = null;
+            $referencedCharacter = null;
+            $entityConsumedCount = 0;
+            $consumedCount = 1;
             $entity = '';
 
             $maxlen = NamedCharacterReferences::getNamedCharacterMaxLength();
-            $ncrs   = NamedCharacterReferences::getNamedCharacterReferences();
-            $chars  = Character::AMPERSAND . $char;
+            $ncrs = NamedCharacterReferences::getNamedCharacterReferences();
+            $chars = Character::AMPERSAND . $char;
             while (
                 $char !== Character::EOF &&
                 strlen($chars) <= $maxlen
             ) {
                 if (isset($ncrs[$chars])) {
-                    $referencedCodepoints   = $ncrs[$chars]['codepoints'];
-                    $referencedCharacter    = $ncrs[$chars]['characters'];
+                    $referencedCodepoints = $ncrs[$chars]['codepoints'];
+                    $referencedCharacter = $ncrs[$chars]['characters'];
                     $entity = $chars;
-                    $entityConsumedCount    = $consumedCount;
+                    $entityConsumedCount = $consumedCount;
                 }
 
                 if ($char === Character::SEMICOLON) break;
 
-                $chars  .= $char = $tokenizer->consume();
+                $chars .= $char = $tokenizer->consume();
                 $consumedCount++;
             }
 
             if ($referencedCharacter) {
                 if (substr($entity, -1) !== Character::SEMICOLON) {
                     $tokenizer->unconsume($consumedCount - $entityConsumedCount);
-                    $tokenizer->error(TokenizerInterface::PARSE_ERROR);
+                    $tokenizer->error(Tokenizer::PARSE_ERROR);
                 }
                 $tmpBuff->reset();
                 $tmpBuff->append($referencedCharacter);
             }
 
             $tokenizer->unconsume($consumedCount);
-            $tokenizer->setState(new CharacterReferenceEnd());
+            $tokenizer->setState(new CharacterReferenceEndState());
         }
     }
 }

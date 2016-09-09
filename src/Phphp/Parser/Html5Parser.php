@@ -1,31 +1,31 @@
 <?php
 namespace Phphp\Parser;
 
-use Phphp\Lexer\Reader\ReaderInterface;
-use Phphp\Lexer\Tokenizer\Html5 as Tokenizer;
+use Phphp\Lexer\Reader\Reader;
+use Phphp\Lexer\Tokenizer\Html5Tokenizer;
 
 /**
  * HTML5をパースする
  **/
-class Html5 implements ParserInterface
+class Html5Parser implements Parser
 {
     private $stopped = false;
 
     /**
      * Tokenizer
-     * @var Phphp\Lexer\Tokenizer\Html5
+     * @var Phphp\Lexer\Tokenizer\Html5Tokenizer
      **/
     private $tokenizer;
 
-    public static function parse(ReaderInterface $reader)
+    public static function parse(Reader $reader)
     {
         $parser = new self($reader);
         $parser->runParsingLoop();
     }
 
-    protected function __construct(ReaderInterface $reader)
+    protected function __construct(Reader $reader)
     {
-        $this->tokenizer    = new Tokenizer($reader);
+        $this->tokenizer    = new Html5Tokenizer($reader);
     }
 
     protected function runParsingLoop()

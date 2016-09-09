@@ -7,7 +7,7 @@ namespace Phphp\Lexer\Reader;
  * @category Lexer
  * @package Analyzer
  **/
-interface ReaderInterface
+interface Reader
 {
     /**
      * @return string

@@ -2,9 +2,9 @@
 namespace Phphp\Lexer\Tokenizer\Html5\Token;
 
 /**
- * Interface TokenInterface
+ * Interface Token
  * @package Phphp\Lexer\Tokenizer\Html5\Token
  */
-interface TokenInterface
+interface Token
 {
 }
