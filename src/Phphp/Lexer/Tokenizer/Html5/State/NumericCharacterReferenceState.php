@@ -12,10 +12,17 @@ class NumericCharacterReferenceState extends AbstractState
     public function handle()
     {
         $tokenizer = $this->getTokenizer();
+
+        // Set the character reference code to zero (0).
         $tokenizer->setCharacterReferenceCode(0);
+
+        // Consume the next input character:
         $char = $tokenizer->consume();
 
-        if (Character::LATIN_SMALL_X || Character::LATIN_CAPITAL_X) {
+        if (
+            $char === Character::LATIN_SMALL_X   ||
+            $char === Character::LATIN_CAPITAL_X
+        ) {
             // Append the current input character to the temporary buffer.
             // Switch to the hexademical character reference start state.
             $tmpBuff = $tokenizer->getTemporaryBuffer();

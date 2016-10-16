@@ -13,7 +13,8 @@ class HexademicalCharacterReferenceStartState extends AbstractState
     public function handle()
     {
         $tokenizer = $this->getTokenizer();
-        $tmpBuff = $tokenizer->getTemporaryBuffer();
+
+        // Consume the next input character:
         $char = $tokenizer->consume();
 
         if ($this->isAsciiHexDigits($char)) {
@@ -21,6 +22,7 @@ class HexademicalCharacterReferenceStartState extends AbstractState
             $tokenizer->unconsume();
             $tokenizer->setState(new HexademicalCharacterReferenceState());
         } else {
+            // Parse error. Reconsume in the character reference end state.
             $tokenizer->error(Tokenizer::PARSE_ERROR);
             $tokenizer->unconsume();
             $tokenizer->setState(new CharacterReferenceEndState());

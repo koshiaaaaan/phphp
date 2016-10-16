@@ -15,6 +15,7 @@ class CharacterReferenceEndState extends AbstractState
         $returnState    = $tokenizer->getReturnState();
         $buffer         = $tokenizer->getTemporaryBuffer()->getBuffer();
 
+        // Check the return state:
         if (
             $returnState instanceof AttributeValueAtDoubleQuotedState ||
             $returnState instanceof AttributeValueAtSignleQuotedState ||
@@ -29,5 +30,6 @@ class CharacterReferenceEndState extends AbstractState
             // token.
             $tokenizer->emitToken(new CharacterToken($buffer));
         }
+        $this->setState($returnState);
     }
 }

@@ -21,6 +21,7 @@ class CharacterReferenceState extends AbstractState
         $tmpBuff->reset();
         $tmpBuff->append(Character::AMPERSAND);
 
+        // Consume the next input character:
         $char = $tokenizer->consume();
 
         if (
@@ -35,8 +36,9 @@ class CharacterReferenceState extends AbstractState
             // Reconsume in the character reference end state.
             $tokenizer->unconsume();
             $tokenizer->setState(new CharacterReferenceEndState());
-        } elseif ($char === Character::NUMBER_SIGN) {
-            // &#...
+        } elseif ($char === Character::NUMBER_SIGN) { // &#...
+            // Append the current input character to the temporary buffer.
+            // Switch to the numeric character reference state.
             $tmpBuff->append($char);
             $tokenizer->setState(new NumericCharacterReferenceState());
         } else {
