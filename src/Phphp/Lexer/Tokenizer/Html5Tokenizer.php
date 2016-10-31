@@ -38,6 +38,11 @@ class Html5Tokenizer implements Tokenizer
     private $tokenQueue = [];
 
     /**
+     * @var integer
+     */
+    private $characterReferenceCode = 0;
+
+    /**
      * Html5Tokenizer constructor.
      * @param Reader $reader
      */
@@ -141,6 +146,14 @@ class Html5Tokenizer implements Tokenizer
     {
         $this->characterReferenceCode = $value;
         return  $this;
+    }
+
+    /**
+     * @return integer
+     */
+    public function getCharacterReferenceCode()
+    {
+        return  $this->characterReferenceCode;
     }
 
     /**
