@@ -18,23 +18,25 @@ class HexademicalCharacterReferenceState extends AbstractState
         // Consume the next input character:
         $char = $tokenizer->consume();
 
+        $code = $tokenizer->getCharacterReferenceCode();
+
         if ($this->isUppercaseAsciiHexDigit($char)) {
             // Multiply the character reference code by 16. Add a numeric
             // version of the current input character as a hexademical digit
             // (subtract 0x0037 from the character's code point) to the
             // character reference code.
-            // TODO:
+            $tokenizer->setCharacterReferenceCode(($code << 4) + (ord($char) - 0x0037));
         } elseif ($this->isLowercaseAsciiHexDigit($char)) {
             // Multiply the character reference code by 16. Add a numeric
             // version of the current input character as a hexademical digit
             // (subtract 0x0057 from the character's code point) to the
             // character reference code.
-            // TODO:
+            $tokenizer->setCharacterReferenceCode(($code << 4) + (ord($char) - 0x0057));
         } elseif ($this->isAsciiDigit($char)) {
             // Multiply the character reference code by 16. Add a numeric
             // version of the current input character (subtract 0x0030 from
             // the character's code point) to the character reference code.
-            // TODO:
+            $tokenizer->setCharacterReferenceCode(($code << 4) + (ord($char) - 0x0030));
         } elseif ($char === Charcter::SEMICOLON) {
             // Switch to the numeric character reference end state.
             $this->setState(new NumericCharacterReferenceEndState());

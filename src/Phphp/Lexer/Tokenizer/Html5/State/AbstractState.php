@@ -72,4 +72,15 @@ class AbstractState implements State
         return  $char >= Character::LATIN_SMALL_A &&
                 $char <= Character::LATIN_SMALL_F;
     }
+
+    /**
+     * @param  integer $code
+     * @param  integer $min
+     * @param  integer $max
+     * @return boolean
+     */
+    protected function inRange($code, $min, $max)
+    {
+        return ($code >= $min && $code < $max);
+    }
 }
