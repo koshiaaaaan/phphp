@@ -17,6 +17,8 @@ class StringReaderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @param StringReader $reader
+     * 
      * @depends testAdvance
      */
     public function testRetreat(StringReader $reader)

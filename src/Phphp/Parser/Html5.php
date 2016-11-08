@@ -2,18 +2,18 @@
 namespace Phphp\Parser;
 
 use Phphp\Lexer\Reader\Reader;
-use Phphp\Lexer\Tokenizer\Html5Tokenizer;
+use Phphp\Lexer\Tokenizer\Html5 as Tokenizer;
 
 /**
  * HTML5をパースする
  **/
-class Html5Parser implements Parser
+class Html5 implements Parser
 {
     private $stopped = false;
 
     /**
      * Tokenizer
-     * @var Phphp\Lexer\Tokenizer\Html5Tokenizer
+     * @var Tokenizer
      **/
     private $tokenizer;
 
@@ -25,7 +25,7 @@ class Html5Parser implements Parser
 
     protected function __construct(Reader $reader)
     {
-        $this->tokenizer    = new Html5Tokenizer($reader);
+        $this->tokenizer    = new Tokenizer($reader);
     }
 
     protected function runParsingLoop()

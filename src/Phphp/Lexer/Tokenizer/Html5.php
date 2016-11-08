@@ -2,15 +2,16 @@
 namespace Phphp\Lexer\Tokenizer;
 
 use Phphp\Lexer\Reader\Reader;
+use Phphp\Lexer\Tokenizer\Html5\CharacterReferenceCode;
 use Phphp\Lexer\Tokenizer\Html5\State;
 use Phphp\Lexer\Tokenizer\Html5\TemporaryBuffer;
 use Phphp\Lexer\Tokenizer\Html5\Token;
 
 /**
- * Class Html5Tokenizer
+ * Class Html5
  * @package Phphp\Lexer\Tokenizer
  */
-class Html5Tokenizer implements Tokenizer
+class Html5 implements Tokenizer
 {
     /**
      * @var Reader
@@ -38,9 +39,9 @@ class Html5Tokenizer implements Tokenizer
     private $tokenQueue = [];
 
     /**
-     * @var integer
+     * @var CharacterReferenceCode
      */
-    private $characterReferenceCode = 0;
+    private $characterReferenceCode;
 
     /**
      * Html5Tokenizer constructor.
@@ -50,7 +51,8 @@ class Html5Tokenizer implements Tokenizer
     {
         $this->reader   = $reader;
         $this->temporaryBuffer  = new TemporaryBuffer();
-        $this->setState(new State\DataState());
+        $this->setState(new State\Data());
+        $this->characterReferenceCode = new CharacterReferenceCode();
     }
 
     /**
@@ -139,17 +141,7 @@ class Html5Tokenizer implements Tokenizer
     }
 
     /**
-     * @param integer $value
-     * @return $this
-     */
-    public function setCharacterReferenceCode($value)
-    {
-        $this->characterReferenceCode = $value;
-        return  $this;
-    }
-
-    /**
-     * @return integer
+     * @return CharacterReferenceCode
      */
     public function getCharacterReferenceCode()
     {

@@ -1,31 +1,29 @@
 <?php
 namespace Phphp\Lexer\Tokenizer\Html5\State;
 
-use Phphp\Lexer\Tokenizer\Html5Tokenizer;
+use Phphp\Lexer\Tokenizer\Html5 as Tokenizer;
 
-class AbstractState implements State
+abstract class AbstractState implements State
 {
     /**
-     * @var Html5Tokenizer
+     * @var Tokenizer
      */
     private $tokenizer;
 
-    public function handle()
-    {
-    }
+    abstract public function handle();
 
     /**
-     * @param Html5Tokenizer $tokenizer
+     * @param Tokenizer $tokenizer
      * @return $this
      */
-    public function setTokenizer(Html5Tokenizer $tokenizer)
+    public function setTokenizer(Tokenizer $tokenizer)
     {
         $this->tokenizer    = $tokenizer;
         return  $this;
     }
 
     /**
-     * @return Html5Tokenizer
+     * @return Tokenizer
      */
     public function getTokenizer()
     {
@@ -38,7 +36,7 @@ class AbstractState implements State
      */
     protected function isAsciiHexDigit($char)
     {
-        return  $this->isDigit($char)                   ||
+        return $this->isDigit($char)                   ||
                 $this->isUppercaseAsciiHexDigit($char)  ||
                 $this->isLowercaseAsciiHexDigit($char);
     }
@@ -49,8 +47,9 @@ class AbstractState implements State
      */
     protected function isDigit($char)
     {
-        return  $char >= Character::DIGIT_0 &&
-                $char <= Character::DIGIT_9;
+        $ord = ord($char);
+        return $ord >= ord(Tokenizer\Character::DIGIT_0) &&
+                $ord <= ord(Tokenizer\Character::DIGIT_9);
     }
 
     /**
@@ -59,8 +58,9 @@ class AbstractState implements State
      */
     protected function isUppercaseAsciiHexDigit($char)
     {
-        return  $char >= Character::LATIN_CAPITAL_A &&
-                $char <= Character::LATIN_CAPITAL_F;
+        $ord = ord($char);
+        return $ord >= ord(Tokenizer\Character::LATIN_CAPITAL_A) &&
+                $ord <= ord(Tokenizer\Character::LATIN_CAPITAL_F);
     }
 
     /**
@@ -69,8 +69,9 @@ class AbstractState implements State
      */
     protected function isLowercaseAsciiHexDigit($char)
     {
-        return  $char >= Character::LATIN_SMALL_A &&
-                $char <= Character::LATIN_SMALL_F;
+        $ord = ord($char);
+        return $ord >= ord(Tokenizer\Character::LATIN_SMALL_A) &&
+                $ord <= ord(Tokenizer\Character::LATIN_SMALL_F);
     }
 
     /**

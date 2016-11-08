@@ -9,7 +9,7 @@ use Phphp\Lexer\Tokenizer\Html5\NamedCharacterReferences;
  * Class CharacterReferenceState
  * @package Phphp\Lexer\Tokenizer\Html5\State
  */
-class CharacterReferenceState extends AbstractState
+class CharacterReference extends AbstractState
 {
     public function handle()
     {
@@ -35,12 +35,12 @@ class CharacterReferenceState extends AbstractState
         ) {
             // Reconsume in the character reference end state.
             $tokenizer->unconsume();
-            $tokenizer->setState(new CharacterReferenceEndState());
+            $tokenizer->setState(new CharacterReferenceEnd());
         } elseif ($char === Character::NUMBER_SIGN) { // &#...
             // Append the current input character to the temporary buffer.
             // Switch to the numeric character reference state.
             $tmpBuff->append($char);
-            $tokenizer->setState(new NumericCharacterReferenceState());
+            $tokenizer->setState(new NumericCharacterReference());
         } else {
             $referencedCodepoints = null;
             $referencedCharacter = null;
@@ -78,7 +78,7 @@ class CharacterReferenceState extends AbstractState
             }
 
             $tokenizer->unconsume($consumedCount);
-            $tokenizer->setState(new CharacterReferenceEndState());
+            $tokenizer->setState(new CharacterReferenceEnd());
         }
     }
 }

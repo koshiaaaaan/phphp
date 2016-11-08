@@ -7,7 +7,7 @@ use Phphp\Lexer\Tokenizer\Html5\Token\CharacterToken;
  * Class CharacterReferenceEndState
  * @package Phphp\Lexer\Tokenizer\Html5\State
  */
-class CharacterReferenceEndState extends AbstractState
+class CharacterReferenceEnd extends AbstractState
 {
     public function handle()
     {
@@ -30,6 +30,6 @@ class CharacterReferenceEndState extends AbstractState
             // token.
             $tokenizer->emitToken(new CharacterToken($buffer));
         }
-        $this->setState($returnState);
+        $tokenizer->setState($returnState);
     }
 }

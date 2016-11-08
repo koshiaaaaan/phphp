@@ -1,6 +1,5 @@
 <?php
 namespace Phphp\Lexer\Tokenizer\Html5\State;
-use Phphp\Lexer\Tokenizer\Html5Tokenizer;
 
 /**
  * Interface State
@@ -11,12 +10,12 @@ interface State
     public function handle();
 
     /**
-     * @param Html5Tokenizer $tokenizer
+     * @param \Phphp\Lexer\Tokenizer\Html5 $tokenizer
      */
-    public function setTokenizer(Html5Tokenizer $tokenizer);
+    public function setTokenizer(\Phphp\Lexer\Tokenizer\Html5 $tokenizer);
 
     /**
-     * @return Html5Tokenizer
+     * @return \Phphp\Lexer\Tokenizer\Html5
      */
     public function getTokenizer();
 }

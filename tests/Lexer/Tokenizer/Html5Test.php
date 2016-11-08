@@ -1,16 +1,16 @@
 <?php
 namespace Phphp\Tests\Lexer\Tokenizer;
 
-use Phphp\Lexer\Tokenizer\Html5Tokenizer;
+use Phphp\Lexer\Tokenizer\Html5;
 use Phphp\Lexer\Tokenizer\Html5\Token;
 use Phphp\Lexer\Reader\StringReader;
 
-class Html5TokenizerTest extends \PHPUnit_Framework_TestCase
+class Html5Test extends \PHPUnit_Framework_TestCase
 {
     public function testGetCharacterToken()
     {
-        $tokenizer = new Html5Tokenizer(new StringReader('abcde'));
-        /* @var Html5\Token\CharacterToken $token */
+        $tokenizer = new Html5(new StringReader('abcde'));
+        /* @var Token\CharacterToken $token */
         $token  = $tokenizer->getNextToken();
         $this->assertInstanceOf(Token\CharacterToken::class, $token);
         $this->assertEquals('a', $token->getCharacters());
@@ -26,9 +26,11 @@ class Html5TokenizerTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @param Html5 $tokenizer
+     * 
      * @depends testGetCharacterToken
      */
-    public function testGetEofToken($tokenizer)
+    public function testGetEofToken(Html5 $tokenizer)
     {
         $token  = $tokenizer->getNextToken();
         $this->assertInstanceOf(Token\EofToken::class, $token);

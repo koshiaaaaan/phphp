@@ -3,13 +3,13 @@ namespace Phphp;
 
 use Phphp\Lexer\Reader\Reader;
 use Phphp\Lexer\Reader\StringReader;
-use Phphp\Parser\Html5Parser;
+use Phphp\Parser\Html5 as Parser;
 
 class Phphp
 {
     /**
      * document reader
-     * @var Phphp\Lexer\Reader\Reader
+     * @var Reader
      **/
     private $reader;
 
@@ -28,7 +28,7 @@ class Phphp
             throw new \InvalidArgumentException('与えられたパラメータが正しくありません');
         }
 
-        $result = Html5Parser::parse($html);
+        $result = Parser::parse($html);
 
         return new self();
     }

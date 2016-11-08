@@ -7,14 +7,14 @@ use Phphp\Lexer\Tokenizer\Html5\Character;
  * Class NumericCharacterReferenceState
  * @package Phphp\Lexer\Tokenizer\Html5\State
  */
-class NumericCharacterReferenceState extends AbstractState
+class NumericCharacterReference extends AbstractState
 {
     public function handle()
     {
         $tokenizer = $this->getTokenizer();
 
         // Set the character reference code to zero (0).
-        $tokenizer->setCharacterReferenceCode(0);
+        $tokenizer->getCharacterReferenceCode()->set(0);
 
         // Consume the next input character:
         $char = $tokenizer->consume();
@@ -27,11 +27,11 @@ class NumericCharacterReferenceState extends AbstractState
             // Switch to the hexademical character reference start state.
             $tmpBuff = $tokenizer->getTemporaryBuffer();
             $tmpBuff->append($char);
-            $tokenizer->setState(new HexademicalCharacterReferenceStartState());
+            $tokenizer->setState(new HexademicalCharacterReferenceStart());
         } else {
             // Reconsume in the decimal character reference start state.
             $tokenizer->unconsume();
-            $tokenizer->setState(new DecimalCharacterReferenceStartState());
+            $tokenizer->setState(new DecimalCharacterReferenceStart());
         }
     }
 }
