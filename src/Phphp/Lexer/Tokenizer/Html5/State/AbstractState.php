@@ -18,7 +18,7 @@ abstract class AbstractState implements State
      */
     public function setTokenizer(Tokenizer $tokenizer)
     {
-        $this->tokenizer    = $tokenizer;
+        $this->tokenizer = $tokenizer;
         return  $this;
     }
 
@@ -36,9 +36,9 @@ abstract class AbstractState implements State
      */
     protected function isAsciiHexDigit($char)
     {
-        return $this->isDigit($char)                   ||
-                $this->isUppercaseAsciiHexDigit($char)  ||
-                $this->isLowercaseAsciiHexDigit($char);
+        return $this->isDigit($char)
+            || $this->isUppercaseAsciiHexDigit($char)
+            || $this->isLowercaseAsciiHexDigit($char);
     }
 
     /**
@@ -48,8 +48,8 @@ abstract class AbstractState implements State
     protected function isDigit($char)
     {
         $ord = ord($char);
-        return $ord >= ord(Tokenizer\Character::DIGIT_0) &&
-                $ord <= ord(Tokenizer\Character::DIGIT_9);
+        return $ord >= ord(Tokenizer\Character::DIGIT_0)
+            && $ord <= ord(Tokenizer\Character::DIGIT_9);
     }
 
     /**
@@ -59,8 +59,8 @@ abstract class AbstractState implements State
     protected function isUppercaseAsciiHexDigit($char)
     {
         $ord = ord($char);
-        return $ord >= ord(Tokenizer\Character::LATIN_CAPITAL_A) &&
-                $ord <= ord(Tokenizer\Character::LATIN_CAPITAL_F);
+        return $ord >= ord(Tokenizer\Character::LATIN_CAPITAL_A)
+            && $ord <= ord(Tokenizer\Character::LATIN_CAPITAL_F);
     }
 
     /**
@@ -70,18 +70,7 @@ abstract class AbstractState implements State
     protected function isLowercaseAsciiHexDigit($char)
     {
         $ord = ord($char);
-        return $ord >= ord(Tokenizer\Character::LATIN_SMALL_A) &&
-                $ord <= ord(Tokenizer\Character::LATIN_SMALL_F);
-    }
-
-    /**
-     * @param  integer $code
-     * @param  integer $min
-     * @param  integer $max
-     * @return boolean
-     */
-    protected function inRange($code, $min, $max)
-    {
-        return ($code >= $min && $code < $max);
+        return $ord >= ord(Tokenizer\Character::LATIN_SMALL_A)
+            && $ord <= ord(Tokenizer\Character::LATIN_SMALL_F);
     }
 }

@@ -15,7 +15,9 @@ class NumericCharacterReferenceEnd extends AbstractState
         $tokenizer = $this->getTokenizer();
 
         // Check the character reference code.
-        $code   = $tokenizer->getCharacterReferenceCode();
+        $code = $tokenizer->getCharacterReferenceCode();
+
+        $char = '';
 
         // If that number is one of the numbers in the first column of the following table, then this is a parse error.
         // Find the row with that number in the first column, and set the character reference code to the number in the
@@ -24,7 +26,7 @@ class NumericCharacterReferenceEnd extends AbstractState
         // https://html.spec.whatwg.org/multipage/syntax.html#numeric-character-reference-end-state
         if ($code->isOverrideTarget()) {
             $tokenizer->error(Tokenizer::PARSE_ERROR);
-            $code->override();
+            $char = $code->override()->toString();
         }
 
         // If the number is in the range 0xD800 to 0xDFFF or is greater than
@@ -32,7 +34,7 @@ class NumericCharacterReferenceEnd extends AbstractState
         // code to 0xFFFD.
         else if ($code->isSanitizationTarget()) {
             $tokenizer->error(Tokenizer::PARSE_ERROR);
-            $code->sanitize();
+            $char = $code->sanitize()->toString();
         }
 
         else if ($code->isInvalidTarget()) {
@@ -44,7 +46,9 @@ class NumericCharacterReferenceEnd extends AbstractState
         // the temporary buffer.
         $tmpBuff = $tokenizer->getTemporaryBuffer();
         $tmpBuff->reset();
-        // TODO:
-        $tmpBuff->append();
+        $tmpBuff->append($char);
+
+        // Switch to the character reference end state.
+        $tokenizer->setState(new CharacterReferenceEnd());
     }
 }

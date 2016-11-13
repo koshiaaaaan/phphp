@@ -35,7 +35,7 @@ class CharacterReferenceCode
     ];
 
     private $sanitizeCode = 0xFFFD;
-    
+
     private $code = 0;
 
     /**
@@ -47,6 +47,7 @@ class CharacterReferenceCode
     }
 
     /**
+     * @return CharacterReferenceCode
      * @throws \ErrorException
      */
     public function override()
@@ -55,6 +56,7 @@ class CharacterReferenceCode
             throw new \ErrorException(sprintf('Does not in override table. `%d`', $this->code));
         }
         $this->code = $this->overrideTable[$this->code];
+        return $this;
     }
 
     /**
@@ -66,14 +68,16 @@ class CharacterReferenceCode
     }
 
     /**
+     * @return CharacterReferenceCode
      * @throws \ErrorException
      */
     public function sanitize()
     {
         if (!$this->isSanitizationTarget()) {
-            throw new \ErrorException(sprintf('Does not sanitize target. `%d`', $this->code));
+            throw new \ErrorException(sprintf('Larger than 0x10FFFD. or High and low surrogate halves are invalid unicode codepoints (U+D800 through U+DFFF, is U+%04X).', $cp));
         }
         $this->code = $this->sanitizeCode;
+        return $this;
     }
 
     /**
@@ -100,7 +104,8 @@ class CharacterReferenceCode
      */
     public function set($code)
     {
-        $this->code = (int) $code;
+        $code = (int) $code;
+        $this->code = ($code >= 0) ? $code : 0;
         return $this;
     }
 
@@ -111,7 +116,7 @@ class CharacterReferenceCode
     {
         return $this->code;
     }
-    
+
     /**
      * @param integer $value
      * @return CharacterReferenceCode
@@ -130,5 +135,32 @@ class CharacterReferenceCode
     {
         $this->code += $value;
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function toString()
+    {
+        $cp = $this->code;
+        if ($this->isOverrideTarget() || $this->isSanitizationTarget()) {
+            return '';
+        }
+        if ($cp <= 0x7F) {
+            return  chr($cp);
+        }
+        if ($cp <= 0x7FF) {
+            return  chr(0xC0 | $cp >> 6 & 0x1F)
+                  . chr(0x80 | $cp & 0x3F);
+        }
+        if ($cp <= 0xFFFF) {
+            return  chr(0xE0 | $cp >> 12 & 0xF)
+                  . chr(0x80 | $cp >> 6 & 0x3F)
+                  . chr(0x80 | $cp & 0x3F);
+        }
+        return  chr(0xF0 | $cp >> 18 & 0x7)
+              . chr(0x80 | $cp >> 12 & 0x3F)
+              . chr(0x80 | $cp >> 6 & 0x3F)
+              . chr(0x80 | $cp & 0x3F);
     }
 }
