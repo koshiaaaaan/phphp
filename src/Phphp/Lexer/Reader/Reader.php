@@ -15,7 +15,7 @@ interface Reader
     public function advance();
 
     /**
-     * @return integer
+     * @return string
      */
     public function retreat();
 }

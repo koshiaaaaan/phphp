@@ -5,7 +5,7 @@ use Phphp\Lexer\Tokenizer\Tokenizer;
 use Phphp\Lexer\Tokenizer\Html5\Character;
 
 /**
- * Class HexademicalCharacterReferenceState
+ * Class HexademicalCharacterReference
  * @package Phphp\Lexer\Tokenizer\Html5\State
  */
 class HexademicalCharacterReference extends AbstractState
@@ -33,7 +33,7 @@ class HexademicalCharacterReference extends AbstractState
             // character reference code.
             $code->multiply(16)
                  ->add(ord($char) - 0x0057);
-        } elseif ($this->isDigit($char)) {
+        } elseif ($this->isAsciiDigit($char)) {
             // Multiply the character reference code by 16. Add a numeric
             // version of the current input character (subtract 0x0030 from
             // the character's code point) to the character reference code.

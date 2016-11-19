@@ -2,9 +2,9 @@
 namespace Phphp\Lexer\Tokenizer\Html5\Token;
 
 /**
- * Class EofToken
+ * Class Eof
  * @package Phphp\Lexer\Tokenizer\Html5\Token
  */
-class EofToken implements Token
+class Eof implements Token
 {
 }

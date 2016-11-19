@@ -5,22 +5,25 @@ namespace Phphp\Lexer\Tokenizer\Html5\Token;
  * Class Character
  * @package Phphp\Lexer\Tokenizer\Html5\Token
  */
-class CharacterToken implements Token
+class Character implements Token
 {
     private $chars = '';
 
-    public function __construct($char)
-    {
-        $this->chars = $char;
-    }
-
+    /**
+     * @param  string $char
+     * @return $this
+     */
     public function appendCharacter($char)
     {
-        $this->chars    .= $char;
+        $this->chars .= $char;
+        return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getCharacters()
     {
-        return  $this->chars;
+        return $this->chars;
     }
 }

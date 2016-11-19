@@ -4,7 +4,7 @@ namespace Phphp\Lexer\Tokenizer\Html5\State;
 use Phphp\Lexer\Tokenizer\Html5\Character;
 
 /**
- * Class NumericCharacterReferenceState
+ * Class NumericCharacterReference
  * @package Phphp\Lexer\Tokenizer\Html5\State
  */
 class NumericCharacterReference extends AbstractState

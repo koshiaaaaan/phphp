@@ -1,12 +1,12 @@
 <?php
 namespace Phphp\Lexer\Tokenizer\Html5\State;
 
-use Phphp\Lexer\Tokenizer\Tokenizer;
+use Phphp\Lexer\Tokenizer\Html5 as Tokenizer;
 use Phphp\Lexer\Tokenizer\Html5\Character;
 use Phphp\Lexer\Tokenizer\Html5\NamedCharacterReferences;
 
 /**
- * Class CharacterReferenceState
+ * Class CharacterReference
  * @package Phphp\Lexer\Tokenizer\Html5\State
  */
 class CharacterReference extends AbstractState
@@ -36,7 +36,7 @@ class CharacterReference extends AbstractState
             // Reconsume in the character reference end state.
             $tokenizer->unconsume();
             $tokenizer->setState(new CharacterReferenceEnd());
-        } elseif ($char === Character::NUMBER_SIGN) { // &#...
+        } elseif ($char === Character::NUMBER_SIGN) {
             // Append the current input character to the temporary buffer.
             // Switch to the numeric character reference state.
             $tmpBuff->append($char);

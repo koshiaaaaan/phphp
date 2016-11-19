@@ -13,15 +13,15 @@ use Phphp\Lexer\Tokenizer\Html5\Token;
  */
 class Html5 implements Tokenizer
 {
+    const TOKEN_TYPE_CHARACTER  = 1;
+    const TOKEN_TYPE_START_TAG  = 2;
+    const TOKEN_TYPE_COMMENT    = 3;
+    const TOKEN_TYPE_EOF        = 99;
+
     /**
      * @var Reader
      */
     private $reader;
-
-    /**
-     * @var TemporaryBuffer
-     */
-    private $temporaryBuffer;
 
     /**
      * @var State\State
@@ -37,6 +37,11 @@ class Html5 implements Tokenizer
      * @var Token\Token[]
      */
     private $tokenQueue = [];
+
+    /**
+     * @var TemporaryBuffer
+     */
+    private $temporaryBuffer;
 
     /**
      * @var CharacterReferenceCode
@@ -83,6 +88,27 @@ class Html5 implements Tokenizer
     }
 
     /**
+     * @param  integer $tokenType
+     * @return Token\Token
+     * @throws \ErrorException
+     */
+    public function createToken($tokenType)
+    {
+        switch ($tokenType) {
+            case static::TOKEN_TYPE_CHARACTER:
+                return new Token\Character();
+            case static::TOKEN_TYPE_EOF;
+                return new Token\Eof();
+            case static::TOKEN_TYPE_START_TAG:
+                return new Token\StartTag();
+            case static::TOKEN_TYPE_COMMENT:
+                return new Token\Comment();
+            default:
+                throw new \InvalidArgumentException('正しいトークンタイプが指定されませんでした。');
+        }
+    }
+
+    /**
      * @param Token\Token $token
      * @return $this
      */
@@ -112,6 +138,11 @@ class Html5 implements Tokenizer
         } else {
             $this->reader->retreat();
         }
+    }
+
+    public function peek($length)
+    {
+        $this->reader->peek($length);
     }
 
     /**

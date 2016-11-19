@@ -1,10 +1,10 @@
 <?php
 namespace Phphp\Lexer\Tokenizer\Html5\State;
 
-use Phphp\Lexer\Tokenizer\Tokenizer;
+use Phphp\Lexer\Tokenizer\Html5 as Tokenizer;
 
 /**
- * Class HexademicalCharacterReferenceStartState
+ * Class HexademicalCharacterReferenceStart
  * @package Phphp\Lexer\Tokenizer\Html5\State
  */
 class HexademicalCharacterReferenceStart extends AbstractState

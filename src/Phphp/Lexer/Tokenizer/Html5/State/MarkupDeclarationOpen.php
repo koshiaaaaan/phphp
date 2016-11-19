@@ -6,10 +6,10 @@ use Phphp\Lexer\Tokenizer\Html5\Character;
 use Phphp\Lexer\Tokenizer\Html5\Token;
 
 /**
- * Class Data
+ * Class MarkupDeclarationOpen
  * @package Phphp\Lexer\Tokenizer\Html5\State
  */
-class Data extends AbstractState
+class MarkupDeclarationOpen extends AbstractState
 {
     public function handle()
     {

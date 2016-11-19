@@ -1,7 +1,7 @@
 <?php
 namespace Phphp\Lexer\Reader;
 
-use Phphp\Lexer\Character;
+use Phphp\Lexer\Tokenizer\Html5\Character;
 
 class StringReader implements Reader
 {
@@ -23,9 +23,10 @@ class StringReader implements Reader
      **/
     private $lastCharPos    = -1;
 
-    private $skipNextNewLine = false;
-    private $gapStack = [];
-    private $lastGapPos = -1;
+    private $cr = false;
+    private $lf = false;
+    private $line = 1;
+    private $cols = [];
 
     public function __construct($data)
     {
@@ -35,9 +36,19 @@ class StringReader implements Reader
                 gettype($data)
             ));
         }
-        $this->data         = $data;
-        $this->pos          = (substr($data, 0, 3) === Character::BOM) ? 2 : -1;
-        $this->lastCharPos  = strlen($data);
+        $this->data = $data;
+        $this->pos = (substr($data, 0, 3) === Character::BOM) ? 2 : -1;
+        $this->lastCharPos = strlen($data);
+        $this->cols[$this->line] = 1;
+    }
+
+    /**
+     * @param  integer $length
+     * @return string
+     */
+    public function peek($length = 1)
+    {
+        return substr($this->data, $this->pos, $length);
     }
 
     /**
@@ -45,26 +56,30 @@ class StringReader implements Reader
      */
     public function advance()
     {
-        $this->pos++;
-
         if ($this->pos >= $this->lastCharPos) {
             return Character::EOF;
         }
 
+        $this->pos++;
+
         $char = $this->data[$this->pos];
 
-        if ($this->skipNextNewLine && $char === Character::LINE_FEED) {
-            $this->skipNextNewLine = false;
-            $this->addGap();
-            return $this->advance();
-        }
-
-        if ($char === Character::CARRIAGE_RETURN) {
-            $this->skipNextNewLine = true;
+        if ($char === Character::LINE_FEED) {
+            if (!$this->cr) {
+                $this->line++;
+                $this->cols[$this->line] = 1;
+            }
+            $this->lf = true;
+        } elseif ($char === Character::CARRIAGE_RETURN) {
+            $this->line++;
+            $this->cols[$this->line] = 1;
+            $this->cr = true;
             return $char;
+        } else {
+            $this->cols[$this->line]++;
         }
 
-        $this->skipNextNewLine = false;
+        $this->cr = false;
 
         return $char;
     }
@@ -74,16 +89,39 @@ class StringReader implements Reader
      */
     public function retreat()
     {
-        if ($this->pos === $this->lastGapPos) {
-            $this->lastGapPos = array_pop($this->gapStack);
+        if ($this->pos > 0) {
             $this->pos--;
         }
-        return $this->pos--;
+
+        $char = $this->data[$this->pos];
+
+        $this->cr = false;
+
+        if ($char === Character::CARRIAGE_RETURN) {
+            if (!$this->lf) {
+                $this->line--;
+            }
+            $this->cr = true;
+        } elseif ($char === Character::LINE_FEED) {
+            $this->line--;
+            $this->lf = true;
+            return $char;
+        } else {
+            $this->cols[$this->line]--;
+        }
+
+        $this->lf = false;
+
+        return $char;
     }
 
-    private function addGap()
+    public function getLine()
     {
-        $this->gapStack[]   = $this->lastGapPos;
-        $this->lastGapPos   = $this->pos;
+        return $this->line;
+    }
+
+    public function getColumn()
+    {
+        return $this->cols[$this->line];
     }
 }

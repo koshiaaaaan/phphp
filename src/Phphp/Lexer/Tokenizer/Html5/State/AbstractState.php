@@ -2,6 +2,7 @@
 namespace Phphp\Lexer\Tokenizer\Html5\State;
 
 use Phphp\Lexer\Tokenizer\Html5 as Tokenizer;
+use Phphp\Lexer\Tokenizer\Html5\Character;
 
 abstract class AbstractState implements State
 {
@@ -34,9 +35,41 @@ abstract class AbstractState implements State
      * @param  string  $char
      * @return boolean
      */
+    protected function isAsciiLetter($char)
+    {
+        return $this->isUppercaseAsciiLetter($char)
+            || $this->isLowercaseAsciiLetter($char);
+    }
+
+    /**
+     * @param  string  $char
+     * @return boolean
+     */
+    protected function isUppercaseAsciiLetter($char)
+    {
+        $ord = ord($char);
+        return $ord >= ord(Character::LATIN_CAPITAL_A)
+            && $ord <= ord(Character::LATIN_CAPITAL_Z);
+    }
+
+    /**
+     * @param  string  $char
+     * @return boolean
+     */
+    protected function isLowercaseAsciiLetter($char)
+    {
+        $ord = ord($char);
+        return $ord >= ord(Character::LATIN_SMALL_A)
+            && $ord <= ord(Character::LATIN_SMALL_Z);
+    }
+
+    /**
+     * @param  string  $char
+     * @return boolean
+     */
     protected function isAsciiHexDigit($char)
     {
-        return $this->isDigit($char)
+        return $this->isAsciiDigit($char)
             || $this->isUppercaseAsciiHexDigit($char)
             || $this->isLowercaseAsciiHexDigit($char);
     }
@@ -45,11 +78,11 @@ abstract class AbstractState implements State
      * @param  string  $char
      * @return boolean
      */
-    protected function isDigit($char)
+    protected function isAsciiDigit($char)
     {
         $ord = ord($char);
-        return $ord >= ord(Tokenizer\Character::DIGIT_0)
-            && $ord <= ord(Tokenizer\Character::DIGIT_9);
+        return $ord >= ord(Character::DIGIT_0)
+            && $ord <= ord(Character::DIGIT_9);
     }
 
     /**
@@ -59,8 +92,8 @@ abstract class AbstractState implements State
     protected function isUppercaseAsciiHexDigit($char)
     {
         $ord = ord($char);
-        return $ord >= ord(Tokenizer\Character::LATIN_CAPITAL_A)
-            && $ord <= ord(Tokenizer\Character::LATIN_CAPITAL_F);
+        return $ord >= ord(Character::LATIN_CAPITAL_A)
+            && $ord <= ord(Character::LATIN_CAPITAL_F);
     }
 
     /**
@@ -70,7 +103,7 @@ abstract class AbstractState implements State
     protected function isLowercaseAsciiHexDigit($char)
     {
         $ord = ord($char);
-        return $ord >= ord(Tokenizer\Character::LATIN_SMALL_A)
-            && $ord <= ord(Tokenizer\Character::LATIN_SMALL_F);
+        return $ord >= ord(Character::LATIN_SMALL_A)
+            && $ord <= ord(Character::LATIN_SMALL_F);
     }
 }

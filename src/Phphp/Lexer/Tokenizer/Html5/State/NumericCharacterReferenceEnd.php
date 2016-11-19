@@ -1,11 +1,10 @@
 <?php
 namespace Phphp\Lexer\Tokenizer\Html5\State;
 
-use Phphp\Lexer\Tokenizer\Html5\CharacterReferenceCode;
 use Phphp\Lexer\Tokenizer\Tokenizer;
 
 /**
- * Class NumericCharacterReferenceEndState
+ * Class NumericCharacterReferenceEnd
  * @package Phphp\Lexer\Tokenizer\Html5\State
  */
 class NumericCharacterReferenceEnd extends AbstractState
