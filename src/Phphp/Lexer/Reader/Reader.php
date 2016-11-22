@@ -10,6 +10,12 @@ namespace Phphp\Lexer\Reader;
 interface Reader
 {
     /**
+     * @param  integer $length
+     * @return string
+     */
+    public function peek($length = 1);
+
+    /**
      * @return string
      */
     public function advance();

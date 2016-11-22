@@ -123,7 +123,7 @@ class Html5 implements Tokenizer
      */
     public function consume()
     {
-        return  $this->reader->advance();
+        return $this->reader->advance();
     }
 
     /**
@@ -140,9 +140,13 @@ class Html5 implements Tokenizer
         }
     }
 
-    public function peek($length)
+    /**
+     * @param $length
+     * @return string
+     */
+    public function peek($length = 1)
     {
-        $this->reader->peek($length);
+        return $this->reader->peek($length);
     }
 
     /**
@@ -150,7 +154,7 @@ class Html5 implements Tokenizer
      */
     public function getTemporaryBuffer()
     {
-        return  $this->temporaryBuffer;
+        return $this->temporaryBuffer;
     }
 
     /**
@@ -168,7 +172,7 @@ class Html5 implements Tokenizer
      */
     public function getReturnState()
     {
-        return  $this->returnState;
+        return $this->returnState;
     }
 
     /**
@@ -176,7 +180,7 @@ class Html5 implements Tokenizer
      */
     public function getCharacterReferenceCode()
     {
-        return  $this->characterReferenceCode;
+        return $this->characterReferenceCode;
     }
 
     /**

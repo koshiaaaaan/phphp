@@ -21,7 +21,6 @@ class StringReaderTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @param  StringReader $reader
-     * @return StringReader
      * 
      * @depends testAdvance
      */
@@ -37,29 +36,46 @@ class StringReaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals("\n", $reader->advance());
         $this->assertEquals('d', $reader->advance());
         $this->assertEquals(Character::EOF, $reader->advance());
-        return $reader;
     }
 
-    public function getLineAndColumn()
+    public function testAdvancedPosition()
     {
         $reader   = new StringReader("abc\rdefg\r\nhijk\nlmn");
         $line = 0;
         $column = 1;
         $data = [
-            [1, 1], [1, 2], [1, 3], [1, 4],
-            [2, 1], [2, 2], [2, 3], [2, 4], [2, 5],
-            [3, 1], [3, 2], [3, 3], [3, 4], [3, 5],
-            [4, 1], [4, 2], [4, 3], [4, 4], [4, 4]
+            [1, 0], [1, 1], [1, 2], [1, 3],
+            [2, 0], [2, 1], [2, 2], [2, 3], [2, 4],
+            [3, 0], [3, 0], [3, 1], [3, 2], [3, 3], [3, 4],
+            [4, 0], [4, 1], [4, 2], [4, 3],
         ];
         foreach ($data as $d) {
             $this->assertEquals($d[$line], $reader->getLine());
             $this->assertEquals($d[$column], $reader->getColumn());
             $reader->advance();
         }
-        foreach (array_reverse($data) as $d) {
-            $this->assertEquals($d[$line], $reader->getLine());
-            $this->assertEquals($d[$column], $reader->getColumn());
-            $reader->retreat();
-        }
+        return $reader;
     }
+//
+//    /**
+//     * @param  StringReader $reader
+//     *
+//     * @depends testAdvancedPosition
+//     */
+//    public function testRetreatedPosition(StringReader $reader)
+//    {
+//        $line = 0;
+//        $column = 1;
+//        $data = [
+//            [4, 4], [4, 3], [4, 2], [4, 1],
+//            [3, 5], [3, 4], [3, 3], [3, 2], [3, 1],
+//            [2, 5], [2, 4], [2, 3], [2, 2], [2, 1],
+//            [1, 4], [1, 4], [1, 3], [1, 2], [1, 1],
+//        ];
+//        foreach ($data as $d) {
+//            $this->assertEquals($d[$line], $reader->getLine());
+//            $this->assertEquals($d[$column], $reader->getColumn());
+//            $reader->retreat();
+//        }
+//    }
 }

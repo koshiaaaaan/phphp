@@ -39,7 +39,7 @@ class StringReader implements Reader
         $this->data = $data;
         $this->pos = (substr($data, 0, 3) === Character::BOM) ? 2 : -1;
         $this->lastCharPos = strlen($data);
-        $this->cols[$this->line] = 1;
+        $this->cols[$this->line] = 0;
     }
 
     /**
@@ -56,24 +56,24 @@ class StringReader implements Reader
      */
     public function advance()
     {
+        $this->pos++;
+
         if ($this->pos >= $this->lastCharPos) {
             return Character::EOF;
         }
-
-        $this->pos++;
 
         $char = $this->data[$this->pos];
 
         if ($char === Character::LINE_FEED) {
             if (!$this->cr) {
                 $this->line++;
-                $this->cols[$this->line] = 1;
+                $this->cols[$this->line] = 0;
             }
             $this->lf = true;
         } elseif ($char === Character::CARRIAGE_RETURN) {
-            $this->line++;
-            $this->cols[$this->line] = 1;
             $this->cr = true;
+            $this->line++;
+            $this->cols[$this->line] = 0;
             return $char;
         } else {
             $this->cols[$this->line]++;
