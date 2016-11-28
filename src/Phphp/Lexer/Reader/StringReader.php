@@ -9,7 +9,7 @@ class StringReader implements Reader
      * Raw data
      * @var string
      **/
-    private $data   = '';
+    private $data = '';
 
     /**
      * Current position
@@ -18,10 +18,16 @@ class StringReader implements Reader
     private $pos = -1;
 
     /**
+     * First character position
+     * @var integer
+     **/
+    private $firstCharPos = 0;
+
+    /**
      * Last character position
      * @var integer
      **/
-    private $lastCharPos    = -1;
+    private $lastCharPos = -1;
 
     private $cr = false;
     private $lf = false;
@@ -38,6 +44,7 @@ class StringReader implements Reader
         }
         $this->data = $data;
         $this->pos = (substr($data, 0, 3) === Character::BOM) ? 2 : -1;
+        $this->firstCharPos = $this->pos;
         $this->lastCharPos = strlen($data);
         $this->cols[$this->line] = 0;
     }
@@ -59,27 +66,24 @@ class StringReader implements Reader
         $this->pos++;
 
         if ($this->pos >= $this->lastCharPos) {
+            $this->pos = $this->lastCharPos;
             return Character::EOF;
         }
 
         $char = $this->data[$this->pos];
+        $next = isset($this->data[$this->pos+1]) ? $this->data[$this->pos+1] : '';
 
         if ($char === Character::LINE_FEED) {
-            if (!$this->cr) {
+            $this->line++;
+            $this->cols[$this->line] = 0;
+        } elseif ($char === Character::CARRIAGE_RETURN) {
+            if ($next !== Character::LINE_FEED) {
                 $this->line++;
                 $this->cols[$this->line] = 0;
             }
-            $this->lf = true;
-        } elseif ($char === Character::CARRIAGE_RETURN) {
-            $this->cr = true;
-            $this->line++;
-            $this->cols[$this->line] = 0;
-            return $char;
         } else {
             $this->cols[$this->line]++;
         }
-
-        $this->cr = false;
 
         return $char;
     }
@@ -89,28 +93,25 @@ class StringReader implements Reader
      */
     public function retreat()
     {
-        if ($this->pos > 0) {
-            $this->pos--;
+        $this->pos--;
+
+        if ($this->pos <= $this->firstCharPos) {
+            $this->pos = $this->firstCharPos;
+            return '';
         }
 
         $char = $this->data[$this->pos];
-
-        $this->cr = false;
+        $next = isset($this->data[$this->pos+1]) ? $this->data[$this->pos+1] : '';
 
         if ($char === Character::CARRIAGE_RETURN) {
-            if (!$this->lf) {
+            if ($next !== Character::LINE_FEED) {
                 $this->line--;
             }
-            $this->cr = true;
         } elseif ($char === Character::LINE_FEED) {
             $this->line--;
-            $this->lf = true;
-            return $char;
         } else {
             $this->cols[$this->line]--;
         }
-
-        $this->lf = false;
 
         return $char;
     }

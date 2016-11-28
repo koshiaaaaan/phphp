@@ -10,5 +10,10 @@ class Comment implements Token
     /**
      * @var string
      */
-    private $comment = '';
+    private $data = '';
+
+    public function appendData($data)
+    {
+        $this->data .= $data;
+    }
 }

@@ -19,8 +19,8 @@ class TemporaryBuffer
      */
     public function reset()
     {
-        $this->buffer   = '';
-        return  $this;
+        $this->buffer = '';
+        return $this;
     }
 
     /**
@@ -31,12 +31,15 @@ class TemporaryBuffer
      */
     public function append($char)
     {
-        $this->buffer   = $char;
-        return  $this;
+        $this->buffer = $char;
+        return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getBuffer()
     {
-        return  $this->buffer;
+        return $this->buffer;
     }
 }

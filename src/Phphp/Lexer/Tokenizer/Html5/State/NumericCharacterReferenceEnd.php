@@ -31,13 +31,14 @@ class NumericCharacterReferenceEnd extends AbstractState
         // If the number is in the range 0xD800 to 0xDFFF or is greater than
         // 0x10FFFF, then this is a parse error. Set the character reference
         // code to 0xFFFD.
-        else if ($code->isSanitizationTarget()) {
+        elseif ($code->isSanitizationTarget()) {
             $tokenizer->error(Tokenizer::PARSE_ERROR);
             $char = $code->sanitize()->toString();
         }
 
-        else if ($code->isInvalidTarget()) {
+        elseif ($code->isInvalidTarget()) {
             $tokenizer->error(Tokenizer::PARSE_ERROR);
+            // FIXME: $char is ...?
         }
 
         // Set the temporary buffer to the empty string. Append the Unicode

@@ -54,8 +54,8 @@ class Html5 implements Tokenizer
      */
     public function __construct(Reader $reader)
     {
-        $this->reader   = $reader;
-        $this->temporaryBuffer  = new TemporaryBuffer();
+        $this->reader = $reader;
+        $this->temporaryBuffer = new TemporaryBuffer();
         $this->setState(new State\Data());
         $this->characterReferenceCode = new CharacterReferenceCode();
     }
@@ -67,7 +67,7 @@ class Html5 implements Tokenizer
     public function setState(State\State $state)
     {
         $state->setTokenizer($this);
-        $this->state    = $state;
+        $this->state = $state;
         return  $this;
     }
 
@@ -119,25 +119,39 @@ class Html5 implements Tokenizer
     }
 
     /**
+     * @param integer $count
      * @return string
      */
-    public function consume()
+    public function consume($count = 1)
     {
-        return $this->reader->advance();
+        if (!is_int($count) || $count <= 0) {
+            $count = 1;
+        }
+
+        $result = '';
+        while ($count-- <= 0) {
+            $result .= $this->reader->advance();
+        }
+
+        return $result;
     }
 
     /**
      * @param integer $count
+     * @return string
      */
-    public function unconsume($count = null)
+    public function unconsume($count = 1)
     {
-        if (is_int($count) && $count > 0) {
-            while ($count-- <= 0) {
-                $this->reader->retreat();
-            }
-        } else {
-            $this->reader->retreat();
+        if (!is_int($count) || $count <= 0) {
+            $count = 1;
         }
+
+        $result = '';
+        while ($count-- <= 0) {
+            $result .= $this->reader->retreat();
+        }
+
+        return $result;
     }
 
     /**
@@ -163,7 +177,7 @@ class Html5 implements Tokenizer
      */
     public function setReturnState(State\State $state)
     {
-        $this->returnState  = $state;
+        $this->returnState = $state;
         return $this;
     }
 
