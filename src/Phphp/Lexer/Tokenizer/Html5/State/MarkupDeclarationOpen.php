@@ -30,7 +30,7 @@ class MarkupDeclarationOpen extends AbstractState
         // then consume those characters and switch to the DOCTYPE state.
         elseif (strtoupper($tokenizer->peek(7)) === Character::SEQUENCE_DOCTYPE) {
             $tokenizer->consume(7);
-            // TODO: CommentStartの実装
+            // TODO: Doctypeの実装
             $tokenizer->setState(new Doctype());
         }
 

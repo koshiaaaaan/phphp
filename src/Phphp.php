@@ -21,7 +21,7 @@ class Phphp
     public static function factory($html)
     {
         if (is_string($html)) {
-            $html   = new StringReader($html);
+            $html = new StringReader($html);
         }
 
         if (!$html instanceof Reader) {

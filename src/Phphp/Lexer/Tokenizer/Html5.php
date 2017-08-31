@@ -9,6 +9,7 @@ use Phphp\Lexer\Tokenizer\Html5\Token;
 
 /**
  * Class Html5
+ * 
  * @package Phphp\Lexer\Tokenizer
  */
 class Html5 implements Tokenizer
@@ -61,17 +62,6 @@ class Html5 implements Tokenizer
     }
 
     /**
-     * @param State\State $state
-     * @return $this
-     */
-    public function setState(State\State $state)
-    {
-        $state->setTokenizer($this);
-        $this->state = $state;
-        return  $this;
-    }
-
-    /**
      * @return Token\Token
      */
     public function getNextToken()
@@ -85,6 +75,17 @@ class Html5 implements Tokenizer
             }
         } while(!$token);
         return $token;
+    }
+
+    /**
+     * @param State\State $state
+     * @return $this
+     */
+    public function setState(State\State $state)
+    {
+        $state->setTokenizer($this);
+        $this->state = $state;
+        return  $this;
     }
 
     /**
@@ -202,5 +203,13 @@ class Html5 implements Tokenizer
      */
     public function error($type)
     {
+    }
+
+    /**
+     * @return array
+     */
+    public function getErrors()
+    {
+        return [];
     }
 }

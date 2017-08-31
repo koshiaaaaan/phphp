@@ -25,7 +25,7 @@ class Html5 implements Parser
 
     protected function __construct(Reader $reader)
     {
-        $this->tokenizer    = new Tokenizer($reader);
+        $this->tokenizer = new Tokenizer($reader);
     }
 
     protected function runParsingLoop()

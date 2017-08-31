@@ -31,7 +31,7 @@ class TemporaryBuffer
      */
     public function append($char)
     {
-        $this->buffer = $char;
+        $this->buffer .= $char;
         return $this;
     }
 
