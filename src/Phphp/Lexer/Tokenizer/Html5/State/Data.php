@@ -4,6 +4,7 @@ namespace Phphp\Lexer\Tokenizer\Html5\State;
 use Phphp\Lexer\Tokenizer\Html5 as Tokenizer;
 use Phphp\Lexer\Tokenizer\Html5\Character;
 use Phphp\Lexer\Tokenizer\Html5\Token;
+use LogicException;
 
 /**
  * Class Data
@@ -11,6 +12,9 @@ use Phphp\Lexer\Tokenizer\Html5\Token;
  */
 class Data extends AbstractState
 {
+    /**
+     * @throws LogicException
+     */
     public function handle()
     {
         $tokenizer = $this->getTokenizer();

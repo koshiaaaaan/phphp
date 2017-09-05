@@ -3,6 +3,7 @@ namespace Phphp\Lexer\Tokenizer\Html5\State;
 
 use Phphp\Lexer\Tokenizer\Html5 as Tokenizer;
 use Phphp\Lexer\Tokenizer\Html5\Character;
+use LogicException;
 
 abstract class AbstractState implements State
 {
@@ -25,10 +26,23 @@ abstract class AbstractState implements State
 
     /**
      * @return Tokenizer
+     * @throws LogicException
      */
     public function getTokenizer()
     {
+        if (!$this->tokenizer) {
+            throw new LogicException('Tokenizerがセットされていません');
+        }
         return  $this->tokenizer;
+    }
+
+    /**
+     * @param int $count
+     * @return string
+     */
+    protected function consume($count = 1)
+    {
+        return $this->tokenizer->consume($count);
     }
 
     /**
