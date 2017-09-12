@@ -12,6 +12,9 @@ abstract class AbstractState implements State
      */
     private $tokenizer;
 
+    /**
+     * @throws LogicException
+     */
     abstract public function handle();
 
     /**
@@ -86,17 +89,6 @@ abstract class AbstractState implements State
         return $this->isAsciiDigit($char)
             || $this->isUppercaseAsciiHexDigit($char)
             || $this->isLowercaseAsciiHexDigit($char);
-    }
-
-    /**
-     * @param  string  $char
-     * @return boolean
-     */
-    protected function isAsciiDigit($char)
-    {
-        $ord = ord($char);
-        return $ord >= ord(Character::DIGIT_0)
-            && $ord <= ord(Character::DIGIT_9);
     }
 
     /**

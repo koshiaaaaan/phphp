@@ -1,5 +1,5 @@
 <?php
-namespace Phphp\Lexer\Tokenizer\Html5;
+namespace Phphp\Lexer\Tokenizer\Html5\Reference;
 
 class Character
 {
@@ -43,4 +43,60 @@ class Character
     const SEQUENCE_SCRIPT       = "\x73\x63\x72\x69\x70\x74";       // script
     const SEQUENCE_PUBLIC       = "\x50\x55\x42\x4C\x49\x43";       // PUBLIC
     const SEQUENCE_SYSTEM       = "\x53\x59\x53\x54\x45\x4D";       // SYSTEM
+
+    /**
+     * @param string $char
+     * @return bool
+     */
+    public static function isAsciiAlphanumeric($char)
+    {
+        // An ASCII alphanumeric is an ASCII digit or ASCII alpha.
+        return static::isAsciiDigit($char) || static::isAsciiAlpha($char);
+    }
+
+    /**
+     * @param string $char
+     * @return bool
+     */
+    public static function isAsciiDigit($char)
+    {
+        // An ASCII digit is a code point in the range U+0030 (0) to U+0039 (9), inclusive.
+        $ord = ord($char);
+        return $ord >= ord(Character::DIGIT_0)
+            && $ord <= ord(Character::DIGIT_9);
+    }
+
+    /**
+     * @param string $char
+     * @return bool
+     */
+    public static function isAsciiAlpha($char)
+    {
+        // An ASCII alpha is an ASCII upper alpha or ASCII lower alpha.
+        return static::isAsciiUpperAlpha($char) || static::isAsciiLowerAlpha($char);
+    }
+
+    /**
+     * @param string $char
+     * @return bool
+     */
+    public static function isAsciiUpperAlpha($char)
+    {
+        // An ASCII upper alpha is a code point in the range U+0041 (A) to U+005A (Z), inclusive.
+        $ord = ord($char);
+        return $ord >= ord(Character::LATIN_CAPITAL_A)
+            && $ord <= ord(Character::LATIN_CAPITAL_Z);
+    }
+
+    /**
+     * @param string $char
+     * @return bool
+     */
+    public static function isAsciiLowerAlpha($char)
+    {
+        // An ASCII lower alpha is a code point in the range U+0061 (a) to U+007A (z), inclusive.
+        $ord = ord($char);
+        return $ord >= ord(Character::LATIN_SMALL_A)
+            && $ord <= ord(Character::LATIN_SMALL_Z);
+    }
 }

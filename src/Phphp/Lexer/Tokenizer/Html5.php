@@ -19,6 +19,9 @@ class Html5 implements Tokenizer
     const TOKEN_TYPE_COMMENT    = 3;
     const TOKEN_TYPE_EOF        = 99;
 
+    // Parse error
+    const UNEXPECTED_NULL_CHARACTER = 0x0001;
+
     /**
      * @var Reader
      */
@@ -201,7 +204,7 @@ class Html5 implements Tokenizer
     /**
      * @param integer $type
      */
-    public function error($type)
+    public function parseError($type)
     {
     }
 
