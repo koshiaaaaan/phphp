@@ -17,6 +17,8 @@ class NamedCharacterReference extends AbstractState
         // identifiers in the first column of the named character references table (in a case-sensitive manner).
         // Append each character to the temporary buffer when it's consumed.
 
+        $maxlen = Character::getNamedCharacterReferenceMaxLength();
+
         $referencedCodepoints = null;
         $referencedCharacter = null;
         $entityConsumedCount = 0;

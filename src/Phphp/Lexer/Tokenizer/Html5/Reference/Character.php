@@ -45,6 +45,39 @@ class Character
     const SEQUENCE_SYSTEM       = "\x53\x59\x53\x54\x45\x4D";       // SYSTEM
 
     /**
+     * @var NamedCharacterReference
+     */
+    protected static $namedCharacterReference;
+
+    /**
+     * @return int
+     */
+    public static function getNamedCharacterReferenceMaxLength()
+    {
+        return static::getNamedCharacterReference()->getMaxLength();
+    }
+
+    /**
+     * @return int
+     */
+    public static function getNamedCharacterReferenceMinLength()
+    {
+        return static::getNamedCharacterReference()->getMinLength();
+    }
+
+    /**
+     * @return NamedCharacterReference
+     */
+    public static function getNamedCharacterReference()
+    {
+        if (is_null(static::$namedCharacterReference)) {
+            // TODO: optionでsourceをセットできるように
+            static::$namedCharacterReference = new NamedCharacterReference();
+        }
+        return static::$namedCharacterReference;
+    }
+
+    /**
      * @param string $char
      * @return bool
      */

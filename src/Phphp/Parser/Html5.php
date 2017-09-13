@@ -19,13 +19,17 @@ class Html5 implements Parser
 
     public static function parse(Reader $reader)
     {
-        $parser = new self($reader);
-        $parser->runParsingLoop();
+        return new self($reader);
     }
 
-    protected function __construct(Reader $reader)
+    /**
+     * Html5 constructor.
+     * @param Reader $reader
+     */
+    public function __construct(Reader $reader)
     {
         $this->tokenizer = new Tokenizer($reader);
+        $this->runParsingLoop();
     }
 
     protected function runParsingLoop()
