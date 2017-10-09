@@ -81,6 +81,15 @@ class Character
      * @param string $char
      * @return bool
      */
+    public static function isEof($char)
+    {
+        return $char === static::EOF;
+    }
+
+    /**
+     * @param string $char
+     * @return bool
+     */
     public static function isAsciiAlphanumeric($char)
     {
         // An ASCII alphanumeric is an ASCII digit or ASCII alpha.

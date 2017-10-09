@@ -34,6 +34,11 @@ class NamedCharacterReference
         $this->namedCharacterReference = $namedCharacterReference;
     }
 
+    public function getNamedCharacterReference($ref)
+    {
+        return isset($this->namedCharacterReference[$ref]) ? $this->namedCharacterReference[$ref] : null;
+    }
+
     /**
      * @return int
      */

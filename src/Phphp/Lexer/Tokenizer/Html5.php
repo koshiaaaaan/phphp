@@ -9,7 +9,7 @@ use Phphp\Lexer\Tokenizer\Html5\Token;
 
 /**
  * Class Html5
- * 
+ *
  * @package Phphp\Lexer\Tokenizer
  */
 class Html5 implements Tokenizer
@@ -21,6 +21,7 @@ class Html5 implements Tokenizer
 
     // Parse error
     const UNEXPECTED_NULL_CHARACTER = 0x0001;
+    const MISSING_SEMICOLON_AFTER_CHARACTER_REFERENCE = 0x0002;
 
     /**
      * @var Reader
@@ -122,6 +123,11 @@ class Html5 implements Tokenizer
         return $this;
     }
 
+    public function getNextInputCharacter()
+    {
+        return $this->reader->peek();
+    }
+
     /**
      * @param integer $count
      * @return string
@@ -134,7 +140,11 @@ class Html5 implements Tokenizer
 
         $result = '';
         while ($count-- <= 0) {
-            $result .= $this->reader->advance();
+            $char = $this->reader->advance();
+            if (Character::isEof($char)) {
+                return (strlen($result) > 1) ? $result : $char;
+            }
+            $result .= $char;
         }
 
         return $result;
