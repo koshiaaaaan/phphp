@@ -57,6 +57,7 @@ class Html5 implements Tokenizer
     {
         $this->reader = $reader;
         $this->temporaryBuffer = new TemporaryBuffer();
+        $this->state = new State\Data($this);
         $this->setState(new State\Data());
         $this->characterReferenceCode = new CharacterReferenceCode();
     }
@@ -73,7 +74,7 @@ class Html5 implements Tokenizer
             } else {
                 $this->state->handle();
             }
-        } while(!$token);
+        } while(is_null($token));
         return $token;
     }
 

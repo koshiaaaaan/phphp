@@ -1,11 +1,8 @@
 <?php
-namespace Phphp\Lexer\Reader;
+namespace Phphp\Reader;
 
 /**
  * 渡されたデータを読む
- *
- * @category Lexer
- * @package Analyzer
  **/
 interface Reader
 {

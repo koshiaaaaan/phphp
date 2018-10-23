@@ -1,9 +1,10 @@
 <?php
-namespace Phphp\Lexer\Reader;
+namespace Phphp\Reader;
 
-use Phphp\Lexer\Tokenizer\Html5\Character;
+use Phphp\Character;
+use OutOfRangeException;
 
-class StringReader implements Reader
+class Text implements Reader
 {
     /**
      * Raw data
@@ -15,7 +16,7 @@ class StringReader implements Reader
      * Current position
      * @var integer
      **/
-    private $pos = -1;
+    private $pos = 0;
 
     /**
      * First character position
@@ -29,23 +30,16 @@ class StringReader implements Reader
      **/
     private $lastCharPos = -1;
 
-    private $cr = false;
-    private $lf = false;
     private $line = 1;
     private $cols = [];
 
-    public function __construct($data)
+    public function __construct(string $data)
     {
-        if (!is_string($data)) {
-            throw new \InvalidArgumentException(sprintf(
-                '与えられたパラメータの型が `string` ではありません。: `%s`',
-                gettype($data)
-            ));
-        }
         $this->data = $data;
-        $this->pos = (substr($data, 0, 3) === Character::BOM) ? 2 : -1;
+        $this->pos = $this->peek(3) === Character::BOM ? 3 : 0;
         $this->firstCharPos = $this->pos;
         $this->lastCharPos = strlen($data);
+        $this->line = 1;
         $this->cols[$this->line] = 0;
     }
 
@@ -53,25 +47,24 @@ class StringReader implements Reader
      * @param  integer $length
      * @return string
      */
-    public function peek($length = 1)
+    public function peek($length = 1): string
     {
         return substr($this->data, $this->pos, $length);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function advance()
     {
-        $this->pos++;
+        $nextPos = $this->pos + 1;
+        if ($nextPos > $this->lastCharPos) {
+            return Character::EOT;
+        }
 
-        if ($this->pos >= $this->lastCharPos) {
-            $this->pos = $this->lastCharPos;
-            return Character::EOF;
+        if (!isset($this->data[$this->pos])) {
+            throw new OutOfRangeException('Data length mismatch');
         }
 
         $char = $this->data[$this->pos];
-        $next = isset($this->data[$this->pos+1]) ? $this->data[$this->pos+1] : '';
+        $next = $this->data[$nextPos] ?? null;
 
         if ($char === Character::LINE_FEED) {
             $this->line++;
@@ -85,6 +78,7 @@ class StringReader implements Reader
             $this->cols[$this->line]++;
         }
 
+        $this->pos++;
         return $char;
     }
 
@@ -93,26 +87,30 @@ class StringReader implements Reader
      */
     public function retreat()
     {
-        $this->pos--;
+        $prevPos = $this->pos - 1;
 
-        if ($this->pos <= $this->firstCharPos) {
-            $this->pos = $this->firstCharPos;
+        if ($prevPos < $this->firstCharPos) {
             return '';
         }
 
-        $char = $this->data[$this->pos];
-        $next = isset($this->data[$this->pos+1]) ? $this->data[$this->pos+1] : '';
+        if (!isset($this->data[$prevPos])) {
+            throw new OutOfRangeException('Data length mismatch');
+        }
 
-        if ($char === Character::CARRIAGE_RETURN) {
-            if ($next !== Character::LINE_FEED) {
+        $char = $this->data[$prevPos];
+        $prev = $this->data[$prevPos-1] ?? null;
+
+        if ($char === Character::LINE_FEED) {
+            if ($prev !== Character::CARRIAGE_RETURN) {
                 $this->line--;
             }
-        } elseif ($char === Character::LINE_FEED) {
+        } elseif ($char === Character::CARRIAGE_RETURN) {
             $this->line--;
         } else {
             $this->cols[$this->line]--;
         }
 
+        $this->pos--;
         return $char;
     }
 
