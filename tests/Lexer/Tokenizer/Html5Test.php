@@ -7,6 +7,14 @@ use Phphp\Lexer\Reader\StringReader;
 
 class Html5Test extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @depends testReader
+     */
+    public function testGivenAmpersand()
+    {
+        $tokenizer = new Html5(new StringReader('&'));
+    }
+
     public function testGetCharacterToken()
     {
         $tokenizer = new Html5(new StringReader('abcde'));

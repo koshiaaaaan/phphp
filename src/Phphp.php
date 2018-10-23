@@ -4,6 +4,7 @@ namespace Phphp;
 use Phphp\Lexer\Reader\Reader;
 use Phphp\Lexer\Reader\StringReader;
 use Phphp\Parser\Html5 as Parser;
+use InvalidArgumentException;
 
 class Phphp
 {
@@ -25,7 +26,7 @@ class Phphp
         }
 
         if (!$html instanceof Reader) {
-            throw new \InvalidArgumentException('与えられたパラメータが正しくありません');
+            throw new InvalidArgumentException('与えられたパラメータが正しくありません');
         }
 
         $result = Parser::parse($html);
