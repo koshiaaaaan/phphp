@@ -40,7 +40,7 @@ use InvalidArgumentException;
  * @method static bool isLatinSmallZ(string $char)
  * @method static bool isBom(string $string)
  * @method static bool isReplacementCharacter(string $string)
- * 
+ *
  * @method static bool isSequenceDashDash(string $string)
  * @method static bool isSequenceDoctype(string $string)
  * @method static bool isSequenceCdataStart(string $string)
@@ -92,6 +92,15 @@ class Character
     const SEQUENCE_PUBLIC       = "\x50\x55\x42\x4C\x49\x43";       // PUBLIC
     const SEQUENCE_SYSTEM       = "\x53\x59\x53\x54\x45\x4D";       // SYSTEM
 
+    /**
+     * このクラスの各定数値と比較を行う
+     *
+     * @param string $name
+     * @param array $arguments
+     * @return bool
+     *
+     * @throws \BadMethodCallException
+     */
     public static function __callStatic(string $name, array $arguments)
     {
         if (!isset($arguments[0]) || !is_string($arguments[0])) {

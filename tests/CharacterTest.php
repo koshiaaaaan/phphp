@@ -9,5 +9,7 @@ class CharacterTest extends TestCase
     public function testMethodCall()
     {
         $this->assertTrue(Character::isLineFeed("\n"));
+        $this->assertTrue(Character::isLineFeed("\x0A"));
+        $this->assertTrue(Character::isLineFeed("\u{000A}"));
     }
 }
