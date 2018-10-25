@@ -1,10 +1,10 @@
 <?php
-namespace Phphp\Reader;
+namespace Phphp\Lexer\Scanner;
 
 /**
  * 渡されたデータを読む
  **/
-interface Reader
+interface Scanner
 {
     /**
      * カーソルはそのままで、先の文字（列）を取得する

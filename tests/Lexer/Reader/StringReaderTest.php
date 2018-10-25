@@ -1,5 +1,5 @@
 <?php
-namespace Phphp\Tests\Reader;
+namespace Phphp\Tests\Scanner;
 
 use Phphp\Lexer\Reader\StringReader;
 use Phphp\Lexer\Tokenizer\Html5\Character;

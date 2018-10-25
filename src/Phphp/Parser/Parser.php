@@ -1,13 +1,13 @@
 <?php
 namespace Phphp\Parser;
 
-use Phphp\Lexer\Reader\Reader;
+use Phphp\Lexer\Scanner\Scanner;
 
 interface Parser
 {
     /**
-     * @param \Phphp\Lexer\Reader\Reader $reader
+     * @param \Phphp\Lexer\Scanner\Scanner $reader
      * @return mixed
      */
-    public static function parse(Reader $reader);
+    public static function parse(Scanner $reader);
 }

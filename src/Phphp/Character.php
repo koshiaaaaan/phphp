@@ -51,7 +51,7 @@ use InvalidArgumentException;
  */
 class Character
 {
-    const EOT                   = -1;
+    const EOT                   = "EOT";
     const NULL                  = "\x00";                           // U+0000   "\u{0000}"  "\0"
     const TABULATION            = "\x09";                           // U+0009   "\u{0009}"  "\t"
     const CARRIAGE_RETURN       = "\x0D";                           // U+000D   "\u{000D}"  "\r"

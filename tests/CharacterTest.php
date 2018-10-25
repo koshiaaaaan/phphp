@@ -1,5 +1,5 @@
 <?php
-namespace Phphp\Tests\Reader;
+namespace Phphp\Tests\Scanner;
 
 use Phphp\Character;
 use PHPUnit\Framework\TestCase;

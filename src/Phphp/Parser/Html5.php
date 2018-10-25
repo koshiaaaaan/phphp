@@ -1,8 +1,8 @@
 <?php
 namespace Phphp\Parser;
 
-use Phphp\Lexer\Reader\Reader;
-use Phphp\Lexer\Tokenizer\Html5 as Tokenizer;
+use Phphp\Scanner\Scanner;
+use Phphp\Lexer\Html5 as Html5Lexer;
 
 /**
  * HTML5をパースする
@@ -12,26 +12,25 @@ class Html5 implements Parser
     private $stopped = false;
 
     /**
-     * Tokenizer
-     * @var Tokenizer
+     * @var \Phphp\Lexer\Lexer $lexer
      **/
-    private $tokenizer;
+    private $lexer;
 
-    public static function parse(Reader $reader)
+    public static function parse(Scanner $reader)
     {
         $parser = new self($reader);
         $parser->runParsingLoop();
     }
 
-    protected function __construct(Reader $reader)
+    protected function __construct(Scanner $reader)
     {
-        $this->tokenizer = new Tokenizer($reader);
+        $this->lexer = new Html5Lexer($reader);
     }
 
     protected function runParsingLoop()
     {
         while (!$this->stopped) {
-            $token = $this->tokenizer->getNextToken();
+            $token = $this->lexer->getNextToken();
             $token->process($this);
         }
      }

@@ -1,16 +1,17 @@
 <?php
-namespace Phphp\Reader;
+namespace Phphp\Lexer\Scanner;
 
 use Phphp\Character;
-use InvalidArgumentException;
 use OutOfRangeException;
 
-class File implements Reader
+class Text implements Scanner
 {
     /**
-     * @var resource
-     */
-    private $handle;
+     * Raw data
+     *
+     * @var string $data
+     **/
+    private $data = '';
 
     /**
      * Current cursor position
@@ -48,36 +49,17 @@ class File implements Reader
     private $cols = [];
 
     /**
-     * File constructor.
+     * Text constructor.
      *
-     * @param string $path
-     *
-     * @throws \InvalidArgumentException
+     * @param string $data
      */
-    public function __construct(string $path)
+    public function __construct(string $data)
     {
-        clearstatcache(false, $path);
-        if (!is_file($path) || !is_readable($path) || !$this->handle = @fopen($path, 'r')) {
-            throw new InvalidArgumentException('読み込み可能なファイルではないか、ファイルが存在しません');
-        }
-        flock($this->handle, LOCK_SH);
-
+        $this->data = $data;
         $this->start = $this->current = $this->peek(3) === Character::BOM ? 3 : 0;
-        fseek($this->handle, $this->start, SEEK_SET);
-        $this->end = filesize($path);
+        $this->end = strlen($data);
         $this->line = 1;
         $this->cols[$this->line] = 0;
-    }
-
-    /**
-     * ファイルハンドラをクローズする
-     */
-    public function __destruct()
-    {
-        if (is_resource($this->handle)) {
-            flock($this->handle, LOCK_UN);
-            fclose($this->handle);
-        }
     }
 
     /**
@@ -88,10 +70,6 @@ class File implements Reader
      */
     public function peek($length = 1): string
     {
-        if ($length === 0) {
-            return '';
-        }
-
         $current = $this->current;
         if ($length < 0) {
             $length = abs($length);
@@ -99,17 +77,9 @@ class File implements Reader
             if ($current < $this->start) {
                 $length = $this->current - $this->start;
                 $current = $this->start;
-                if ($length === 0) {
-                    return '';
-                }
             }
-            fseek($this->handle, $current, SEEK_SET);
-            return fread($this->handle, $length);
         }
-
-        $result = fread($this->handle, $length);
-        fseek($this->handle, $current, SEEK_SET);
-        return $result;
+        return substr($this->data, $current, $length);
     }
 
     /**
@@ -126,13 +96,13 @@ class File implements Reader
             return Character::EOT;
         }
 
-        if (feof($this->handle) || $this->current !== ftell($this->handle)) {
+        if (!isset($this->data[$this->current])) {
             throw new OutOfRangeException('Data length mismatch');
         }
 
-        $currChar = fgetc($this->handle);
+        $currChar = $this->data[$this->current];
+        $nextChar = $this->data[$next] ?? null;
         $this->current++;
-        $nextChar = $this->peek(1);
 
         if ($currChar === Character::LINE_FEED) {
             $this->line++;
@@ -159,19 +129,19 @@ class File implements Reader
     public function retreat(): string
     {
         $this->current--;
+        $prev = $this->current - 1;
 
         if ($this->current < $this->start) {
             $this->current = $this->start;
             return '';
         }
-        fseek($this->handle, $this->current, SEEK_SET);
 
-        if (feof($this->handle) || $this->current !== ftell($this->handle)) {
+        if (!isset($this->data[$this->current])) {
             throw new OutOfRangeException('Data length mismatch');
         }
 
-        $currChar = $this->peek(1);
-        $prevChar = $this->peek(-1);
+        $currChar = $this->data[$this->current];
+        $prevChar = $this->data[$prev] ?? null;
 
         if ($currChar === Character::LINE_FEED) {
             if ($prevChar !== Character::CARRIAGE_RETURN) {
