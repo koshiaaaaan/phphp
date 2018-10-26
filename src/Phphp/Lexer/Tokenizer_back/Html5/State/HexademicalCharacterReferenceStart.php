@@ -1,13 +1,13 @@
 <?php
-namespace Phphp\Lexer\Tokenizer\Html5\State;
+namespace Phphp\Lexer\Tokenizer_back\Html5\State;
 
-use Phphp\Lexer\Tokenizer\Html5 as Tokenizer;
+use Phphp\Lexer\Tokenizer_back\Html5 as Tokenizer;
 
 /**
- * Class DecimalCharacterReferenceStart
+ * Class HexademicalCharacterReferenceStart
  * @package Phphp\Lexer\Tokenizer\Html5\State
  */
-class DecimalCharacterReferenceStart extends AbstractState
+class HexademicalCharacterReferenceStart extends AbstractState
 {
     public function handle()
     {
@@ -16,10 +16,10 @@ class DecimalCharacterReferenceStart extends AbstractState
         // Consume the next input character:
         $char = $tokenizer->consume();
 
-        if ($this->isAsciiDigit($char)) {
-            // Reconsume in the decimal character reference state.
+        if ($this->isAsciiHexDigit($char)) {
+            // Reconsume in the hexademical character reference state.
             $tokenizer->unconsume();
-            $tokenizer->setState(new DecimalCharacterReference());
+            $tokenizer->setState(new HexademicalCharacterReference());
         } else {
             // Parse error. Reconsume in the character reference end state.
             $tokenizer->error(Tokenizer::PARSE_ERROR);

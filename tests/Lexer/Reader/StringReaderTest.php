@@ -2,7 +2,7 @@
 namespace Phphp\Tests\Scanner;
 
 use Phphp\Lexer\Reader\StringReader;
-use Phphp\Lexer\Tokenizer\Html5\Character;
+use Phphp\Lexer\Tokenizer_back\Html5\Character;
 
 class StringReaderTest extends \PHPUnit_Framework_TestCase
 {

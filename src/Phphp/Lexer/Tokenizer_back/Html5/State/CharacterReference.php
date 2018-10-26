@@ -1,9 +1,9 @@
 <?php
-namespace Phphp\Lexer\Tokenizer\Html5\State;
+namespace Phphp\Lexer\Tokenizer_back\Html5\State;
 
-use Phphp\Lexer\Tokenizer\Html5 as Tokenizer;
-use Phphp\Lexer\Tokenizer\Html5\Character;
-use Phphp\Lexer\Tokenizer\Html5\NamedCharacterReferences;
+use Phphp\Lexer\Tokenizer_back\Html5 as Tokenizer;
+use Phphp\Lexer\Tokenizer_back\Html5\Character;
+use Phphp\Lexer\Tokenizer_back\Html5\NamedCharacterReferences;
 
 /**
  * Class CharacterReference

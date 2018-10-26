@@ -1,8 +1,9 @@
 <?php
 namespace Phphp\Lexer\Scanner;
 
-use Phphp\Character;
 use OutOfRangeException;
+use Phphp\Character;
+use Phphp\Contracts\Lexer\Scanner;
 
 class Text implements Scanner
 {

@@ -1,9 +1,9 @@
 <?php
-namespace Phphp\Lexer\Tokenizer\Html5\State;
+namespace Phphp\Lexer\Tokenizer_back\Html5\State;
 
-use Phphp\Lexer\Tokenizer\Html5 as Tokenizer;
-use Phphp\Lexer\Tokenizer\Html5\Character;
-use Phphp\Lexer\Tokenizer\Html5\Token;
+use Phphp\Lexer\Tokenizer_back\Html5 as Tokenizer;
+use Phphp\Lexer\Tokenizer_back\Html5\Character;
+use Phphp\Lexer\Tokenizer_back\Html5\Token;
 
 /**
  * Class MarkupDeclarationOpen
@@ -35,7 +35,7 @@ class MarkupDeclarationOpen extends AbstractState
         }
 
         elseif (strtoupper($tokenizer->peek(7)) === Character::SEQUENCE_CDATA_START) {
-            
+
         }
 
         $char = $tokenizer->consume();

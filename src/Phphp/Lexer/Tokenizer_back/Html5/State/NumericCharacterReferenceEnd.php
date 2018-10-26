@@ -1,7 +1,7 @@
 <?php
-namespace Phphp\Lexer\Tokenizer\Html5\State;
+namespace Phphp\Lexer\Tokenizer_back\Html5\State;
 
-use Phphp\Lexer\Tokenizer\Tokenizer;
+use Phphp\Lexer\Tokenizer_back\Tokenizer;
 
 /**
  * Class NumericCharacterReferenceEnd

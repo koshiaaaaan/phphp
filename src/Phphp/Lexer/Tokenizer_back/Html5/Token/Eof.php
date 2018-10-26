@@ -1,5 +1,5 @@
 <?php
-namespace Phphp\Lexer\Tokenizer\Html5\Token;
+namespace Phphp\Lexer\Tokenizer_back\Html5\Token;
 
 /**
  * Class Eof

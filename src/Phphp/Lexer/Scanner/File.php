@@ -1,9 +1,10 @@
 <?php
 namespace Phphp\Lexer\Scanner;
 
-use Phphp\Character;
-use InvalidArgumentException;
 use OutOfRangeException;
+use InvalidArgumentException;
+use Phphp\Character;
+use Phphp\Contracts\Lexer\Scanner;
 
 class File implements Scanner
 {

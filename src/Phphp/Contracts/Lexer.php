@@ -1,5 +1,5 @@
 <?php
-namespace Phphp\Lexer;
+namespace Phphp\Contracts;
 
 interface Lexer
 {

@@ -1,5 +1,5 @@
 <?php
-namespace Phphp\Lexer\Scanner;
+namespace Phphp\Contracts\Lexer;
 
 /**
  * 渡されたデータを読む

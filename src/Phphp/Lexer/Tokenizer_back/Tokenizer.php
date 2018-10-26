@@ -1,5 +1,5 @@
 <?php
-namespace Phphp\Lexer\Tokenizer;
+namespace Phphp\Lexer\Tokenizer_back;
 
 /**
  * Interface Tokenizer

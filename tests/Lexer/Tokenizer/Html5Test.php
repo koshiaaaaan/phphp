@@ -1,8 +1,8 @@
 <?php
 namespace Phphp\Tests\Lexer\Tokenizer;
 
-use Phphp\Lexer\Tokenizer\Html5;
-use Phphp\Lexer\Tokenizer\Html5\Token;
+use Phphp\Lexer\Tokenizer_back\Html5;
+use Phphp\Lexer\Tokenizer_back\Html5\Token;
 use Phphp\Lexer\Reader\StringReader;
 
 class Html5Test extends \PHPUnit_Framework_TestCase
@@ -35,7 +35,7 @@ class Html5Test extends \PHPUnit_Framework_TestCase
 
     /**
      * @param Html5 $tokenizer
-     * 
+     *
      * @depends testGetCharacterToken
      */
     public function testGetEofToken(Html5 $tokenizer)

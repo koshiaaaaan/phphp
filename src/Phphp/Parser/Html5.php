@@ -1,8 +1,10 @@
 <?php
 namespace Phphp\Parser;
 
-use Phphp\Scanner\Scanner;
-use Phphp\Lexer\Html5 as Html5Lexer;
+use Phphp\Lexer\Scanner\File;
+use Phphp\Lexer\Html5 as Lexer;
+use Phphp\Lexer\Scanner\Text;
+use Phphp\Contracts\Parser;
 
 /**
  * HTML5をパースする
@@ -16,21 +18,31 @@ class Html5 implements Parser
      **/
     private $lexer;
 
-    public static function parse(Scanner $reader)
+    public static function parse(string $html)
     {
-        $parser = new self($reader);
+        $scanner = new Text($html);
+        $lexer = new Lexer($scanner);
+        $parser = new static($lexer);
         $parser->runParsingLoop();
     }
 
-    protected function __construct(Scanner $reader)
+    public static function parseFile(string $path)
     {
-        $this->lexer = new Html5Lexer($reader);
+        $scanner = new File($path);
+        $lexer = new Lexer($scanner);
+        $parser = new static($lexer);
+        $parser->runParsingLoop();
+    }
+
+    protected function __construct(Lexer $lexer)
+    {
+        $this->lexer = $lexer;
     }
 
     protected function runParsingLoop()
     {
         while (!$this->stopped) {
-            $token = $this->lexer->getNextToken();
+            $token = $this->lexer->analyze();
             $token->process($this);
         }
      }
