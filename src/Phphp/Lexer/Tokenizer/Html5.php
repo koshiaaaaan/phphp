@@ -1,43 +1,41 @@
 <?php
 namespace Phphp\Lexer\Tokenizer;
 
-use Phphp\Lexer\Tokenizer\Html5\State\Data;
 use Phphp\Contracts\Lexer\Scanner;
 use Phphp\Contracts\Lexer\Tokenizer;
+use Phphp\Lexer\Tokenizer\Html5\TokenQueue;
+use Phphp\Lexer\Tokenizer\Html5\TokenizeManager;
+use Phphp\Lexer\Tokenizer\Html5\State\Data;
 
 class Html5 implements Tokenizer
 {
     /**
-     * @var \Phphp\Contracts\Lexer\Scanner $scanner
+     * @var \Phphp\Lexer\Tokenizer\Html5\TokenizeManager
      */
-    protected $scanner;
+    protected $manager;
 
     /**
-     * @var string $state
+     * @var string $returnState
      */
-    protected $state;
+    protected $returnState;
 
-    /**
-     * @var \Phphp\Contracts\Lexer\Tokenizer\Html5\Token[] $tokenQueue
-     */
-    protected $tokenQueue = [];
+    protected $temporaryBuffer;
 
     public function __construct(Scanner $scanner)
     {
-        $this->scanner = $scanner;
-        $this->state = Data::class;
+        $this->manager = new TokenizeManager($scanner);
+        $this->returnState = '';
     }
 
     public function tokenize()
     {
+        $queue = $this->manager->getTokenQueue();
         do {
             $token = null;
-            if (count($this->tokenQueue) > 0) {
-                $token = array_shift($this->tokenQueue);
+            if ($queue->count() > 0) {
+                $token = $queue->dequeue();
             } else {
-                /** @var \Phphp\Contracts\Lexer\Tokenizer\Html5\State $state */
-                $state = new $this->state();
-                $this->state = $state->handle();
+                $this->manager->handle();
             }
         } while (is_null($token));
         return $token;
