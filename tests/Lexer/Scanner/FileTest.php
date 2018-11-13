@@ -83,11 +83,11 @@ class FileTest extends TestCase
             $this->assertSame(4, $scanner->getLine());
         }
 
-        $this->assertSame(Character::EOT, $scanner->advance());
+        $this->assertSame(Character::EOF, $scanner->advance());
         $this->assertSame(12, $scanner->getColumn());
         $this->assertSame(4, $scanner->getLine());
 
-        $this->assertSame(Character::EOT, $scanner->advance());
+        $this->assertSame(Character::EOF, $scanner->advance());
         $this->assertSame(12, $scanner->getColumn());
         $this->assertSame(4, $scanner->getLine());
 
@@ -104,7 +104,7 @@ class FileTest extends TestCase
         $file = $this->getWritingFile($source);
         $scanner = new File($file);
 
-        while (Character::EOT !== $scanner->advance()) {}
+        while (Character::EOF !== $scanner->advance()) {}
 
         $this->assertSame(12, $scanner->getColumn());
         $this->assertSame(4, $scanner->getLine());
@@ -174,8 +174,8 @@ class FileTest extends TestCase
 
         $this->assertSame(0, $scanner->getColumn());
         $this->assertSame(1, $scanner->getLine());
-        $this->assertSame(Character::EOT, $scanner->advance());
-        $this->assertSame(Character::EOT, $scanner->advance());
+        $this->assertSame(Character::EOF, $scanner->advance());
+        $this->assertSame(Character::EOF, $scanner->advance());
         $this->assertSame(0, $scanner->getColumn());
         $this->assertSame(1, $scanner->getLine());
         $this->assertSame('', $scanner->retreat());
@@ -206,8 +206,8 @@ class FileTest extends TestCase
         $this->assertSame('og', $scanner->peek(-2));
         $this->assertSame('hog', $scanner->peek(-5));
         $this->assertSame('e', $scanner->advance());
-        $this->assertSame(Character::EOT, $scanner->advance());
-        $this->assertSame(Character::EOT, $scanner->advance());
+        $this->assertSame(Character::EOF, $scanner->advance());
+        $this->assertSame(Character::EOF, $scanner->advance());
         $this->assertSame('e', $scanner->peek(-1));
         $this->assertSame('ge', $scanner->peek(-2));
         $this->assertSame('hoge', $scanner->peek(-5));
@@ -226,8 +226,8 @@ class FileTest extends TestCase
         $this->assertSame('og', $scanner->peek(-2));
         $this->assertSame('hog', $scanner->peek(-5));
         $this->assertSame('e', $scanner->advance());
-        $this->assertSame(Character::EOT, $scanner->advance());
-        $this->assertSame(Character::EOT, $scanner->advance());
+        $this->assertSame(Character::EOF, $scanner->advance());
+        $this->assertSame(Character::EOF, $scanner->advance());
         $this->assertSame('e', $scanner->peek(-1));
         $this->assertSame('ge', $scanner->peek(-2));
         $this->assertSame('hoge', $scanner->peek(-5));

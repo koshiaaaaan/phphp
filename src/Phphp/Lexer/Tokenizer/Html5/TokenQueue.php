@@ -22,9 +22,11 @@ class TokenQueue implements Countable
     }
 
     /**
-     * @return \Phphp\Contracts\Lexer\Tokenizer\Html5\Token
+     * @return \Phphp\Contracts\Lexer\Tokenizer\Html5\Token | null
+     *
+     * TODO: PHP >= v7.1 => use nullable return type
      */
-    public function dequeue(): Token
+    public function dequeue()
     {
         return array_shift($this->queue);
     }

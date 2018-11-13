@@ -1,7 +1,6 @@
 <?php
 namespace Phphp\Lexer\Tokenizer\Html5\Traits;
 
-
 use Phphp\Contracts\Lexer\Tokenizer\Html5\State;
 
 trait StateHandler
@@ -21,7 +20,10 @@ trait StateHandler
      */
     public function handle(): self
     {
-        return $this->setState($this->newState()->handle());
+        if ($state = $this->newState()->handle()) {
+            $this->setState($state);
+        }
+        return $this;
     }
 
     /**

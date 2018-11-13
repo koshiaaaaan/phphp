@@ -8,7 +8,7 @@ use InvalidArgumentException;
  * Class Character
  * @package Phphp
  *
- * @method static bool isEot(string $char)
+ * @method static bool isEof(string $char)
  * @method static bool isNull(string $char)
  * @method static bool isTabulation(string $char)
  * @method static bool isCarriageReturn(string $char)
@@ -51,7 +51,7 @@ use InvalidArgumentException;
  */
 class Character
 {
-    const EOT                   = "EOT";
+    const EOF                   = "EOF";
     const NULL                  = "\x00";                           // U+0000   "\u{0000}"  "\0"
     const TABULATION            = "\x09";                           // U+0009   "\u{0009}"  "\t"
     const CARRIAGE_RETURN       = "\x0D";                           // U+000D   "\u{000D}"  "\r"
@@ -108,7 +108,7 @@ class Character
         }
         if ('is' === substr($name, 0, 2) && strlen($name) >= 3) {
             $name = substr($name, 2);
-            if (!ctype_upper($name)) {
+            if (strtoupper($name) !== $name) {
                 $name = strtoupper(preg_replace('/(.)(?=[A-Z])/u', '$1_', $name));
             }
             if (defined('static::'.$name)) {

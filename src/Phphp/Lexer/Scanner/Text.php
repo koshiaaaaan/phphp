@@ -94,7 +94,7 @@ class Text implements Scanner
     {
         $next = $this->current + 1;
         if ($next > $this->end) {
-            return Character::EOT;
+            return Character::EOF;
         }
 
         if (!isset($this->data[$this->current])) {

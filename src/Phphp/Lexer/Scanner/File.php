@@ -133,7 +133,7 @@ class File implements Scanner
     {
         $next = $this->current + 1;
         if ($next > $this->end) {
-            return Character::EOT;
+            return Character::EOF;
         }
 
         if (feof($this->handle) || $this->current !== ftell($this->handle)) {

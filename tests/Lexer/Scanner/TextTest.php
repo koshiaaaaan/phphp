@@ -70,11 +70,11 @@ class TextTest extends TestCase
             $this->assertSame(4, $scanner->getLine());
         }
 
-        $this->assertSame(Character::EOT, $scanner->advance());
+        $this->assertSame(Character::EOF, $scanner->advance());
         $this->assertSame(12, $scanner->getColumn());
         $this->assertSame(4, $scanner->getLine());
 
-        $this->assertSame(Character::EOT, $scanner->advance());
+        $this->assertSame(Character::EOF, $scanner->advance());
         $this->assertSame(12, $scanner->getColumn());
         $this->assertSame(4, $scanner->getLine());
 
@@ -84,7 +84,7 @@ class TextTest extends TestCase
     /**
      * @depends testAdvance
      *
-     * @param \Phphp\Scanner\Text $scanner
+     * @param \Phphp\Lexer\Scanner\Text $scanner
      */
     public function testRetreat(Text $scanner)
     {
@@ -153,8 +153,8 @@ class TextTest extends TestCase
 
         $this->assertSame(0, $scanner->getColumn());
         $this->assertSame(1, $scanner->getLine());
-        $this->assertSame(Character::EOT, $scanner->advance());
-        $this->assertSame(Character::EOT, $scanner->advance());
+        $this->assertSame(Character::EOF, $scanner->advance());
+        $this->assertSame(Character::EOF, $scanner->advance());
         $this->assertSame(0, $scanner->getColumn());
         $this->assertSame(1, $scanner->getLine());
         $this->assertSame('', $scanner->retreat());
@@ -178,8 +178,8 @@ class TextTest extends TestCase
         $this->assertSame('og', $scanner->peek(-2));
         $this->assertSame('hog', $scanner->peek(-5));
         $this->assertSame('e', $scanner->advance());
-        $this->assertSame(Character::EOT, $scanner->advance());
-        $this->assertSame(Character::EOT, $scanner->advance());
+        $this->assertSame(Character::EOF, $scanner->advance());
+        $this->assertSame(Character::EOF, $scanner->advance());
         $this->assertSame('e', $scanner->peek(-1));
         $this->assertSame('ge', $scanner->peek(-2));
         $this->assertSame('hoge', $scanner->peek(-5));
@@ -195,8 +195,8 @@ class TextTest extends TestCase
         $this->assertSame('og', $scanner->peek(-2));
         $this->assertSame('hog', $scanner->peek(-5));
         $this->assertSame('e', $scanner->advance());
-        $this->assertSame(Character::EOT, $scanner->advance());
-        $this->assertSame(Character::EOT, $scanner->advance());
+        $this->assertSame(Character::EOF, $scanner->advance());
+        $this->assertSame(Character::EOF, $scanner->advance());
         $this->assertSame('e', $scanner->peek(-1));
         $this->assertSame('ge', $scanner->peek(-2));
         $this->assertSame('hoge', $scanner->peek(-5));

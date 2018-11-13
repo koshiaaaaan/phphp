@@ -3,41 +3,65 @@ namespace Phphp\Lexer\Tokenizer;
 
 use Phphp\Contracts\Lexer\Scanner;
 use Phphp\Contracts\Lexer\Tokenizer;
-use Phphp\Lexer\Tokenizer\Html5\TokenQueue;
-use Phphp\Lexer\Tokenizer\Html5\TokenizeManager;
+use Phphp\Contracts\Lexer\Tokenizer\Html5\Token;
 use Phphp\Lexer\Tokenizer\Html5\State\Data;
+use Phphp\Lexer\Tokenizer\Html5\TokenQueue;
+use Phphp\Lexer\Tokenizer\Html5\Traits\Consumer;
+use Phphp\Lexer\Tokenizer\Html5\Traits\ErrorManager;
+use Phphp\Lexer\Tokenizer\Html5\Traits\StateHandler;
 
 class Html5 implements Tokenizer
 {
-    /**
-     * @var \Phphp\Lexer\Tokenizer\Html5\TokenizeManager
-     */
-    protected $manager;
+    use Consumer;
+    use StateHandler;
+    use ErrorManager;
 
     /**
-     * @var string $returnState
+     * @var \Phphp\Contracts\Lexer\Scanner
      */
-    protected $returnState;
+    protected $scanner;
 
-    protected $temporaryBuffer;
+    /**
+     * @var \Phphp\Lexer\Tokenizer\Html5\TokenQueue
+     */
+    protected $tokenQueue;
 
+    /**
+     * @param \Phphp\Contracts\Lexer\Scanner $scanner
+     */
     public function __construct(Scanner $scanner)
     {
-        $this->manager = new TokenizeManager($scanner);
-        $this->returnState = '';
+        $this->setState(Data::class);
+        $this->scanner = $scanner;
+        $this->tokenQueue = new TokenQueue();
     }
 
-    public function tokenize()
+    /**
+     * @return \Phphp\Contracts\Lexer\Tokenizer\Html5\Token | null
+     *
+     * TODO: PHP >= v7.1 => use nullable return type
+     */
+    public function getNextToken()
     {
-        $queue = $this->manager->getTokenQueue();
-        do {
-            $token = null;
-            if ($queue->count() > 0) {
-                $token = $queue->dequeue();
-            } else {
-                $this->manager->handle();
-            }
-        } while (is_null($token));
-        return $token;
+        return $this->tokenQueue->dequeue();
+    }
+
+    /**
+     * @param \Phphp\Contracts\Lexer\Tokenizer\Html5\Token $token
+     * @return TokenQueue
+     */
+    public function emitToken(Token $token)
+    {
+        return $this->tokenQueue->enqueue($token);
+    }
+
+    public function setTemporaryBuffer(string $buffer)
+    {
+        $this->temporaryBuffer->set($buffer);
+    }
+
+    public function appendTemporaryBuffer(string $buffer)
+    {
+        $this->temporaryBuffer->append($buffer);
     }
 }

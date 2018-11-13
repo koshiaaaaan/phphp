@@ -3,7 +3,7 @@ namespace Phphp\Lexer;
 
 use Phphp\Contracts\Lexer;
 use Phphp\Contracts\Lexer\Scanner;
-use Phphp\Lexer\Tokenizer\Html5 as Tokenizer;
+use Phphp\Lexer\Tokenizer\Html5 as Html5Tokenizer;
 
 class Html5 implements Lexer
 {
@@ -19,11 +19,21 @@ class Html5 implements Lexer
      */
     public function __construct(Scanner $scanner)
     {
-        $this->tokenizer = new Tokenizer($scanner);
+        $this->tokenizer = new Html5Tokenizer($scanner);
     }
 
+    /**
+     * Tokenize
+     *
+     * @return Lexer\Tokenizer\Html5\Token
+     */
     public function analyze()
     {
-        return $this->tokenizer->tokenize();
+        do {
+            if (!$token = $this->tokenizer->getNextToken()) {
+                $this->tokenizer->handle();
+            }
+        } while (is_null($token));
+        return $token;
     }
 }

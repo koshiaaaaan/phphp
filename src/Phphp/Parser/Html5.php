@@ -1,8 +1,9 @@
 <?php
 namespace Phphp\Parser;
 
+use Phphp\Contracts\Lexer;
 use Phphp\Lexer\Scanner\File;
-use Phphp\Lexer\Html5 as Lexer;
+use Phphp\Lexer\Html5 as Html5Lexer;
 use Phphp\Lexer\Scanner\Text;
 use Phphp\Contracts\Parser;
 
@@ -14,14 +15,14 @@ class Html5 implements Parser
     private $stopped = false;
 
     /**
-     * @var \Phphp\Lexer\Lexer $lexer
+     * @var \Phphp\Contracts\Lexer $lexer
      **/
     private $lexer;
 
     public static function parse(string $html)
     {
         $scanner = new Text($html);
-        $lexer = new Lexer($scanner);
+        $lexer = new Html5Lexer($scanner);
         $parser = new static($lexer);
         $parser->runParsingLoop();
     }
@@ -29,7 +30,7 @@ class Html5 implements Parser
     public static function parseFile(string $path)
     {
         $scanner = new File($path);
-        $lexer = new Lexer($scanner);
+        $lexer = new Html5Lexer($scanner);
         $parser = new static($lexer);
         $parser->runParsingLoop();
     }
