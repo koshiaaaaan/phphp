@@ -85,6 +85,7 @@ class TextTest extends TestCase
      * @depends testAdvance
      *
      * @param \Phphp\Lexer\Scanner\Text $scanner
+     * @return \Phphp\Lexer\Scanner\Text $scanner
      */
     public function testRetreat(Text $scanner)
     {
@@ -145,6 +146,31 @@ class TextTest extends TestCase
         $this->assertSame('', $scanner->retreat());
         $this->assertSame(0, $scanner->getColumn());
         $this->assertSame(1, $scanner->getLine());
+
+        return $scanner;
+    }
+
+    /**
+     * @depends testRetreat
+     *
+     * @param \Phphp\Lexer\Scanner\Text $scanner
+     */
+    public function testAdvanceAndRetreat(Text $scanner)
+    {
+        $this->assertSame('h', $scanner->advance());
+        $this->assertSame('o', $scanner->advance());
+        $this->assertSame('g', $scanner->advance());
+        $this->assertSame('e', $scanner->advance());
+        $this->assertSame("\n", $scanner->advance());
+        $this->assertSame('f', $scanner->advance());
+
+        $this->assertSame('f', $scanner->retreat());
+        $this->assertSame("\n", $scanner->retreat());
+        $this->assertSame('e', $scanner->retreat());
+        $this->assertSame('g', $scanner->retreat());
+
+        $this->assertSame('g', $scanner->advance());
+        $this->assertSame('e', $scanner->advance());
     }
 
     public function testEmptyText()

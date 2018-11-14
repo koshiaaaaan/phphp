@@ -5,16 +5,17 @@ use Phphp\Contracts\Lexer\Scanner;
 use Phphp\Contracts\Lexer\Tokenizer;
 use Phphp\Contracts\Lexer\Tokenizer\Html5\Token;
 use Phphp\Lexer\Tokenizer\Html5\State\Data;
-use Phphp\Lexer\Tokenizer\Html5\TokenQueue;
-use Phphp\Lexer\Tokenizer\Html5\Traits\Consumer;
-use Phphp\Lexer\Tokenizer\Html5\Traits\ErrorManager;
-use Phphp\Lexer\Tokenizer\Html5\Traits\StateHandler;
+use Phphp\Lexer\Tokenizer\Html5\Support\Consumer;
+use Phphp\Lexer\Tokenizer\Html5\Support\ErrorManager;
+use Phphp\Lexer\Tokenizer\Html5\Support\StateHandler;
+use Phphp\Lexer\Tokenizer\Html5\Support\TemporaryBuffer;
 
 class Html5 implements Tokenizer
 {
     use Consumer;
     use StateHandler;
     use ErrorManager;
+    use TemporaryBuffer;
 
     /**
      * @var \Phphp\Contracts\Lexer\Scanner
@@ -22,9 +23,9 @@ class Html5 implements Tokenizer
     protected $scanner;
 
     /**
-     * @var \Phphp\Lexer\Tokenizer\Html5\TokenQueue
+     * @var \Phphp\Contracts\Lexer\Tokenizer\Html5\Token[]
      */
-    protected $tokenQueue;
+    protected $tokenQueue = [];
 
     /**
      * @param \Phphp\Contracts\Lexer\Scanner $scanner
@@ -33,35 +34,28 @@ class Html5 implements Tokenizer
     {
         $this->setState(Data::class);
         $this->scanner = $scanner;
-        $this->tokenQueue = new TokenQueue();
     }
 
     /**
+     * Dequeue token queue
+     *
      * @return \Phphp\Contracts\Lexer\Tokenizer\Html5\Token | null
      *
      * TODO: PHP >= v7.1 => use nullable return type
      */
     public function getNextToken()
     {
-        return $this->tokenQueue->dequeue();
+        return array_shift($this->tokenQueue);
     }
 
     /**
+     * Enqueue token queue
      * @param \Phphp\Contracts\Lexer\Tokenizer\Html5\Token $token
-     * @return TokenQueue
+     * @return $this
      */
-    public function emitToken(Token $token)
+    public function emitToken(Token $token): self
     {
-        return $this->tokenQueue->enqueue($token);
-    }
-
-    public function setTemporaryBuffer(string $buffer)
-    {
-        $this->temporaryBuffer->set($buffer);
-    }
-
-    public function appendTemporaryBuffer(string $buffer)
-    {
-        $this->temporaryBuffer->append($buffer);
+        $this->tokenQueue[] = $token;
+        return $this;
     }
 }

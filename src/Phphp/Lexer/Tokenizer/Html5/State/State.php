@@ -16,13 +16,19 @@ abstract class State implements StateContracts
     private $tokenizer;
 
     /**
-     * State constructor.
      * @param \Phphp\Lexer\Tokenizer\Html5 $tokenizer
      */
     final public function __construct(Tokenizer $tokenizer)
     {
         $this->tokenizer = $tokenizer;
     }
+
+    /**
+     * @return string | null
+     *
+     * @throws \Phphp\Lexer\Tokenizer\Html5\Error\ParseErrorException
+     */
+    abstract public function handle();
 
     /**
      * @param $name

@@ -8,12 +8,13 @@ use Phphp\Lexer\Tokenizer\Html5\Token;
 class Data extends State
 {
     /**
-     * @return string | null
+     * {@inheritdoc}
      */
     public function handle()
     {
         // Consume the next input character:
         $char = $this->consume();
+
         // U+0026 AMPERSAND (&)
         if (Character::isAmpersand($char)) {
             // Set the return state to the data state. Switch to the character reference state.

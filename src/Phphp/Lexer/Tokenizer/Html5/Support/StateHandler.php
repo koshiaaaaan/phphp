@@ -1,5 +1,5 @@
 <?php
-namespace Phphp\Lexer\Tokenizer\Html5\Traits;
+namespace Phphp\Lexer\Tokenizer\Html5\Support;
 
 use Phphp\Contracts\Lexer\Tokenizer\Html5\State;
 
@@ -52,5 +52,13 @@ trait StateHandler
     {
         $this->returnState = $stateClass;
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getReturnState(): string
+    {
+        return $this->returnState;
     }
 }

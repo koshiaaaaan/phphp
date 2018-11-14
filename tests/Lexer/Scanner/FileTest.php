@@ -1,38 +1,44 @@
 <?php
 namespace Phphp\Tests\Scanner;
 
+use org\bovigo\vfs\vfsStream;
 use Phphp\Character;
 use Phphp\Lexer\Scanner\File;
 use PHPUnit\Framework\TestCase;
 
 class FileTest extends TestCase
 {
-    public function getWritingFile($string = '')
+    /**
+     * @var \org\bovigo\vfs\vfsStreamFile
+     */
+    private $file;
+
+    public function setUp()
     {
-        $file = tempnam(sys_get_temp_dir(), 'php');
-        if (strlen($string)) {
-            file_put_contents($file, $string, LOCK_EX);
-        }
-        return $file;
+        parent::setUp();
+        $root = vfsStream::setup();
+        $this->file = vfsStream::newFile('test')
+            ->at($root);
     }
 
     public function testPeek()
     {
-        $file = $this->getWritingFile('hoge');
-        $scanner = new File($file);
+        $this->file->withContent('hoge');
+        $scanner = new File($this->file->url());
         $this->assertSame('h', $scanner->peek(1));
         $this->assertSame('ho', $scanner->peek(2));
         $this->assertSame('hoge', $scanner->peek(4));
         $this->assertSame('hoge', $scanner->peek(5));
-        unset($scanner);
-        unlink($file);
     }
 
+    /**
+     * @return \Phphp\Lexer\Scanner\File
+     */
     public function testAdvance()
     {
         $source = "hoge\nfugafuga\r\npiyopiyopiyo\rhogefugapiyo";
-        $file = $this->getWritingFile($source);
-        $scanner = new File($file);
+        $this->file->withContent($source);
+        $scanner = new File($this->file->url());
 
         $this->assertSame(0, $scanner->getColumn());
         $this->assertSame(1, $scanner->getLine());
@@ -91,18 +97,18 @@ class FileTest extends TestCase
         $this->assertSame(12, $scanner->getColumn());
         $this->assertSame(4, $scanner->getLine());
 
-        unset($scanner);
-        unlink($file);
+        return $scanner;
     }
 
     /**
      * @depends testAdvance
+     *
+     * @param \Phphp\Lexer\Scanner\File $scanner
+     * @return \Phphp\Lexer\Scanner\File
      */
-    public function testRetreat()
+    public function testRetreat(File $scanner)
     {
         $source = "hoge\nfugafuga\r\npiyopiyopiyo\rhogefugapiyo";
-        $file = $this->getWritingFile($source);
-        $scanner = new File($file);
 
         while (Character::EOF !== $scanner->advance()) {}
 
@@ -162,15 +168,35 @@ class FileTest extends TestCase
         $this->assertSame(0, $scanner->getColumn());
         $this->assertSame(1, $scanner->getLine());
 
-        $file = $scanner->getPath();
-        unset($scanner);
-        unlink($file);
+        return $scanner;
+    }
+
+    /**
+     * @depends testRetreat
+     *
+     * @param \Phphp\Lexer\Scanner\File $scanner
+     */
+    public function testAdvanceAndRetreat(File $scanner)
+    {
+        $this->assertSame('h', $scanner->advance());
+        $this->assertSame('o', $scanner->advance());
+        $this->assertSame('g', $scanner->advance());
+        $this->assertSame('e', $scanner->advance());
+        $this->assertSame("\n", $scanner->advance());
+        $this->assertSame('f', $scanner->advance());
+
+        $this->assertSame('f', $scanner->retreat());
+        $this->assertSame("\n", $scanner->retreat());
+        $this->assertSame('e', $scanner->retreat());
+        $this->assertSame('g', $scanner->retreat());
+
+        $this->assertSame('g', $scanner->advance());
+        $this->assertSame('e', $scanner->advance());
     }
 
     public function testEmptyFile()
     {
-        $file = $this->getWritingFile();
-        $scanner = new File($file);
+        $scanner = new File($this->file->url());
 
         $this->assertSame(0, $scanner->getColumn());
         $this->assertSame(1, $scanner->getLine());
@@ -184,8 +210,6 @@ class FileTest extends TestCase
         $this->assertSame(1, $scanner->getLine());
         $this->assertSame('', $scanner->peek());
         $this->assertSame('', $scanner->peek(5));
-        unset($scanner);
-        unlink($file);
     }
 
     /**
@@ -194,8 +218,8 @@ class FileTest extends TestCase
      */
     public function testPeekForward()
     {
-        $file = $this->getWritingFile('hoge');
-        $scanner = new File($file);
+        $this->file->withContent('hoge');
+        $scanner = new File($this->file->url());
         $this->assertSame('', $scanner->peek(0));
         $this->assertSame('h', $scanner->advance());
         $this->assertSame('h', $scanner->peek(-1));
@@ -211,11 +235,9 @@ class FileTest extends TestCase
         $this->assertSame('e', $scanner->peek(-1));
         $this->assertSame('ge', $scanner->peek(-2));
         $this->assertSame('hoge', $scanner->peek(-5));
-        unset($scanner);
-        unlink($file);
 
-        $file = $this->getWritingFile(Character::BOM.'hoge');
-        $scanner = new File($file);
+        $this->file->withContent(Character::BOM.'hoge');
+        $scanner = new File($this->file->url());
         $this->assertSame('', $scanner->peek(0));
         $this->assertSame('h', $scanner->advance());
         $this->assertSame('h', $scanner->peek(-1));
@@ -231,7 +253,5 @@ class FileTest extends TestCase
         $this->assertSame('e', $scanner->peek(-1));
         $this->assertSame('ge', $scanner->peek(-2));
         $this->assertSame('hoge', $scanner->peek(-5));
-        unset($scanner);
-        unlink($file);
     }
 }

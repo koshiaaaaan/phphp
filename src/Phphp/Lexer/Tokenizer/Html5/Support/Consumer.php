@@ -1,5 +1,5 @@
 <?php
-namespace Phphp\Lexer\Tokenizer\Html5\Traits;
+namespace Phphp\Lexer\Tokenizer\Html5\Support;
 
 /**
  * @property \Phphp\Contracts\Lexer\Scanner $scanner

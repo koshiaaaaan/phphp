@@ -117,4 +117,57 @@ class Character
         }
         throw new BadMethodCallException('Invalid method name');
     }
+
+    /**
+     * @param string $char
+     * @return bool
+     */
+    public static function isAsciiAlphaNumeric(string $char): bool
+    {
+        return static::isAsciiDigit($char)
+            || static::isAsciiAlpha($char);
+    }
+
+    /**
+     * @param string $char
+     * @return bool
+     */
+    public static function isAsciiDigit(string $char): bool
+    {
+        $ord = ord($char);
+        return $ord >= ord(Character::DIGIT_0)
+            && $ord <= ord(Character::DIGIT_9);
+    }
+
+    /**
+     * @param string $char
+     * @return bool
+     */
+    public static function isAsciiAlpha(string $char): bool
+    {
+        return static::isAsciiUpperAlpha($char)
+            || static::isAsciiLowerAlpha($char);
+    }
+
+    /**
+     * @param string $char
+     * @return bool
+     */
+    public static function isAsciiUpperAlpha(string $char): bool
+    {
+        $ord = ord($char);
+        return $ord >= ord(Character::LATIN_CAPITAL_A)
+            && $ord <= ord(Character::LATIN_CAPITAL_Z);
+    }
+
+    /**
+     * @param string $char
+     * @return bool
+     */
+    public static function isAsciiLowerAlpha(string $char): bool
+    {
+        $ord = ord($char);
+        return $ord >= ord(Character::LATIN_SMALL_A)
+            && $ord <= ord(Character::LATIN_SMALL_Z);
+    }
 }

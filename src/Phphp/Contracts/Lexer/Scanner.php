@@ -12,19 +12,19 @@ interface Scanner
      * @param  integer $length = 1
      * @return string
      */
-    public function peek($length = 1);
+    public function peek($length = 1): string;
 
     /**
      * 次の１文字を取得し、カーソルを進める
      *
      * @return string
      */
-    public function advance();
+    public function advance(): string;
 
     /**
      * 前の１文字を取得し、カーソルを戻す
      *
      * @return string
      */
-    public function retreat();
+    public function retreat(): string;
 }
