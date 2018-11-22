@@ -1,0 +1,21 @@
+#!/usr/bin/env php
+<?php
+
+if (count($argv) <= 1) {
+}
+
+if (isset($argv[1])) {
+    if ($argv[1] === 'download') {
+        $url = 'https://html.spec.whatwg.org/entities.json';
+        $options = [
+            'ssl' => [
+                'verify_peer' => false,
+                'verify_peer_name' => false,
+            ],
+        ];
+        $context = stream_context_create($options);
+        $output = __DIR__.'/../src/Phphp/resources/entities.json';
+        $contents = file_get_contents($url, false, $context);
+        file_put_contents($output, $contents);
+    }
+}

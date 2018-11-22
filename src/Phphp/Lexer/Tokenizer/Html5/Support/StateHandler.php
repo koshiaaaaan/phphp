@@ -1,6 +1,7 @@
 <?php
 namespace Phphp\Lexer\Tokenizer\Html5\Support;
 
+use InvalidArgumentException;
 use Phphp\Contracts\Lexer\Tokenizer\Html5\State;
 
 trait StateHandler
@@ -31,6 +32,9 @@ trait StateHandler
      */
     protected function newState(): State
     {
+        if (!is_subclass_of($this->currentState, State::class)) {
+            throw new InvalidArgumentException(sprintf('Given class \'%s\' does not implements State interface', $this->currentState));
+        }
         return new $this->currentState($this);
     }
 

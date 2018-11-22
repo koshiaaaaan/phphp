@@ -1,43 +1,61 @@
 <?php
 namespace Phphp\Tests\Lexer\Tokenizer\Html5\Support;
 
+use ReflectionClass;
 use Phphp\Character;
-use Phphp\Lexer\Scanner\Text;
+use Phphp\Contracts\Lexer\Scanner;
 use Phphp\Lexer\Tokenizer\Html5\Support\Consumer;
 use PHPUnit\Framework\TestCase;
 
 class ConsumerTest extends TestCase
 {
-    public function getConsumerExtendsObject($text)
-    {
-        return new class($text) {
-            use Consumer;
-
-            public function __construct($text)
-            {
-                $this->scanner = new Text($text);
-            }
-        };
-    }
-
+    /**
+     * @throws \ReflectionException
+     */
     public function testConsume()
     {
-        $consumer = $this->getConsumerExtendsObject('abcd');
+        $scanner = $this->getMockBuilder(Scanner::class)
+            ->setMethods(['advance'])
+            ->getMock();
+        $scanner->expects($this->exactly(6))
+            ->method('advance')
+            ->will($this->onConsecutiveCalls('a', 'b', 'c', 'd', 'e', Character::EOF));
+
+        /** @var \Phphp\Lexer\Tokenizer\Html5\Support\Consumer $consumer */
+        $consumer = $this->getMockBuilder(Consumer::class)
+            ->getMockForTrait();
+        $property = (new ReflectionClass($consumer))->getProperty('scanner');
+        $property->setAccessible(true);
+        $property->setValue($consumer, $scanner);
+
         $this->assertSame('a', $consumer->consume());
         $this->assertSame('b', $consumer->consume());
         $this->assertSame('c', $consumer->consume());
         $this->assertSame('d', $consumer->consume());
+        $this->assertSame('e', $consumer->consume());
         $this->assertSame(Character::EOF, $consumer->consume());
-        return $consumer;
     }
 
     /**
-     * @depends testConsume
-     *
-     * @param $consumer
+     * @throws \ReflectionException
      */
-    public function testUnconsume($consumer)
+    public function testUnconsume()
     {
+        $scanner = $this->getMockBuilder(Scanner::class)
+            ->setMethods(['retreat'])
+            ->getMock();
+        $scanner->expects($this->exactly(6))
+            ->method('retreat')
+            ->will($this->onConsecutiveCalls('e', 'd', 'c', 'b', 'a', ''));
+
+        /** @var \Phphp\Lexer\Tokenizer\Html5\Support\Consumer $consumer */
+        $consumer = $this->getMockBuilder(Consumer::class)
+            ->getMockForTrait();
+        $property = (new ReflectionClass($consumer))->getProperty('scanner');
+        $property->setAccessible(true);
+        $property->setValue($consumer, $scanner);
+
+        $this->assertSame('e', $consumer->unconsume());
         $this->assertSame('d', $consumer->unconsume());
         $this->assertSame('c', $consumer->unconsume());
         $this->assertSame('b', $consumer->unconsume());

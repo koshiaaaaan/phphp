@@ -18,11 +18,6 @@ class Html5 implements Tokenizer
     use TemporaryBuffer;
 
     /**
-     * @var \Phphp\Contracts\Lexer\Scanner
-     */
-    protected $scanner;
-
-    /**
      * @var \Phphp\Contracts\Lexer\Tokenizer\Html5\Token[]
      */
     protected $tokenQueue = [];

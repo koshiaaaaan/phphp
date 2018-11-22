@@ -3,7 +3,8 @@
   "description": "PHP html parser",
   "license": "MIT",
   "require": {
-    "php": ">=7.0"
+    "php": ">=7.0",
+    "ext-json": "*"
   },
   "require-dev": {
     "phpunit/phpunit": "^7.4",
@@ -24,5 +25,8 @@
     "test": [
       "phpunit --colors=always --testdox"
     ]
-  }
+  },
+  "bin": [
+    "bin/phphp"
+  ]
 }

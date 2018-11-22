@@ -6,6 +6,11 @@ namespace Phphp\Lexer\Tokenizer\Html5\Support;
  */
 trait Consumer
 {
+    /**
+     * @var \Phphp\Contracts\Lexer\Scanner
+     */
+    protected $scanner;
+
     public function consume()
     {
         return $this->scanner->advance();

@@ -32,6 +32,7 @@ class CharacterReference extends State
         // Anything else
         else {
             // Flush code points consumed as a character reference.
+            $this->flush($this->getTemporaryBuffer());
             // Reconsume in the return state.
             $this->unconsume();
             return $this->getReturnState();

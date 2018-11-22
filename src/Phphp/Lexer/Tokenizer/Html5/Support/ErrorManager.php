@@ -43,7 +43,7 @@ trait ErrorManager
      * @param \Phphp\Lexer\Tokenizer\Html5\Error\ParseErrorException $error
      * @return $this
      */
-    public function stockError(ParseErrorException $error): self
+    protected function stockError(ParseErrorException $error): self
     {
         $this->errors[] = $error;
         return $this;

@@ -2,89 +2,61 @@
 namespace Phphp\Tests\Lexer\Tokenizer;
 
 use PHPUnit\Framework\TestCase;
-use Phphp\Character;
 use Phphp\Contracts\Lexer\Scanner;
-use Phphp\Contracts\Lexer\Tokenizer\Html5\State;
+use Phphp\Contracts\Lexer\Tokenizer\Html5\Token;
 use Phphp\Lexer\Tokenizer\Html5;
-use Phphp\Lexer\Tokenizer\Html5\State\CharacterReference;
+use Phphp\Lexer\Tokenizer\Html5\Support\Consumer;
+use Phphp\Lexer\Tokenizer\Html5\Support\ErrorManager;
+use Phphp\Lexer\Tokenizer\Html5\Support\StateHandler;
+use Phphp\Lexer\Tokenizer\Html5\Support\TemporaryBuffer;
 
 class Html5Test extends TestCase
 {
-    /**
-     * @return \PHPUnit\Framework\MockObject\MockObject | \Phphp\Contracts\Lexer\Scanner
-     */
-    public function getScannerMock()
+    public function testExistsTrait()
     {
-        return $this->getMockBuilder(Scanner::class)
-            ->setMethods(['advance', 'retreat', 'peek'])
+        /** @var \PHPUnit\Framework\MockObject\MockObject | \Phphp\Contracts\Lexer\Scanner $scanner */
+        $scanner = $this->getMockBuilder(Scanner::class)
             ->getMock();
+        $html5 = new Html5($scanner);
+
+        foreach (get_class_methods(Consumer::class) as $method) {
+            $this->assertTrue(method_exists($html5, $method));
+        }
+
+        foreach (get_class_methods(ErrorManager::class) as $method) {
+            $this->assertTrue(method_exists($html5, $method));
+        }
+
+        foreach (get_class_methods(StateHandler::class) as $method) {
+            $this->assertTrue(method_exists($html5, $method));
+        }
+
+        foreach (get_class_methods(TemporaryBuffer::class) as $method) {
+            $this->assertTrue(method_exists($html5, $method));
+        }
     }
 
-    //==========================================================================
-    // \Phphp\Lexer\Tokenizer\Html5\Support\Consumer
-    //==========================================================================
-
-    public function testConsume()
+    public function testTokenQueue()
     {
-        $scanner = $this->getScannerMock();
-        $scanner->expects($this->atLeastOnce())
-            ->method('advance')
-            ->will($this->onConsecutiveCalls('a', 'b', 'c', 'd', 'e', Character::EOF));
+        /** @var \PHPUnit\Framework\MockObject\MockObject | \Phphp\Contracts\Lexer\Scanner $scanner */
+        $scanner = $this->getMockBuilder(Scanner::class)
+            ->getMock();
+        $html5 = new Html5($scanner);
 
-        $tokenizer = new Html5($scanner);
-        $this->assertSame('a', $tokenizer->consume());
-        $this->assertSame('b', $tokenizer->consume());
-        $this->assertSame('c', $tokenizer->consume());
-        $this->assertSame('d', $tokenizer->consume());
-        $this->assertSame('e', $tokenizer->consume());
-        $this->assertSame(Character::EOF, $tokenizer->consume());
-    }
-
-    public function testUnconsume()
-    {
-        $scanner = $this->getScannerMock();
-        $scanner->expects($this->atLeastOnce())
-            ->method('retreat')
-            ->will($this->onConsecutiveCalls('e', 'd', 'c', 'b', 'a', ''));
-
-        $tokenizer = new Html5($scanner);
-
-        $this->assertSame('e', $tokenizer->unconsume());
-        $this->assertSame('d', $tokenizer->unconsume());
-        $this->assertSame('c', $tokenizer->unconsume());
-        $this->assertSame('b', $tokenizer->unconsume());
-        $this->assertSame('a', $tokenizer->unconsume());
-        $this->assertSame('', $tokenizer->unconsume());
-    }
-
-    //==========================================================================
-    // \Phphp\Lexer\Tokenizer\Html5\Support\StateHandler
-    //==========================================================================
-
-    public function testStateReturnType()
-    {
-        $scanner = $this->getScannerMock();
-        $tokenizer = new Html5($scanner);
-
-        $state = $this->getMockBuilder(State::class)
-            ->setMockClassName('TestState')
-            ->setMethods(['handle'])
+        /** @var \PHPUnit\Framework\MockObject\MockObject | \Phphp\Contracts\Lexer\Tokenizer\Html5\Token $token */
+        $token = $this->getMockBuilder(Token::class)
             ->getMock();
 
-        $state->expects($this->once())
-            ->method('handle')
-            ->will($this->onConsecutiveCalls(get_class($state)));
+        $this->assertNull($html5->getNextToken());
 
-        $this->assertInstanceOf(Html5::class, $tokenizer->setState(get_class($state)));
-        $this->assertInstanceOf(Html5::class, $tokenizer->handle());
+        $this->assertInstanceOf(Html5::class, $html5->emitToken($token));
+        $this->assertInstanceOf(Token::class, $html5->getNextToken());
+        $this->assertNull($html5->getNextToken());
 
-        $state->expects($this->once())
-            ->method('handle')
-            ->will($this->onConsecutiveCalls(null));
-
-        $this->assertInstanceOf(Html5::class, $tokenizer->handle());
-
+        $this->assertInstanceOf(Html5::class, $html5->emitToken($token));
+        $this->assertInstanceOf(Html5::class, $html5->emitToken($token));
+        $this->assertInstanceOf(Token::class, $html5->getNextToken());
+        $this->assertInstanceOf(Token::class, $html5->getNextToken());
+        $this->assertNull($html5->getNextToken());
     }
-
-
 }
